@@ -139,5 +139,8 @@ public class ScrollingActivity extends AppCompatActivity {
 
     private void test() {
         List<Map<String, String>> data = new ArrayList<>();
+        View view = new View(this);
+
+
     }
 }
