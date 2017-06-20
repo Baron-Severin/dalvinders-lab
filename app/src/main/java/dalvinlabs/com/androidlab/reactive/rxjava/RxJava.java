@@ -51,6 +51,7 @@ public class RxJava {
 
     /*
         Observable and Observer runs on a same thread.
+        just emits single item i.e. in this case whole list.
      */
     public static void just() {
         Observable<List<String>> myObservable = Observable.just(getData());
@@ -130,4 +131,7 @@ public class RxJava {
     }
 
 
+    /*
+
+     */
 }

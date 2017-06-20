@@ -11,19 +11,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-//import java.util.Date;
-//import java.util.TimeZone;
-//import java.util.regex.Matcher;
-//import java.util.regex.Pattern;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import dalvinlabs.com.androidlab.Network.okhttp.OkHttp;
 import dalvinlabs.com.androidlab.deeplink.DeepLinkOptionsActivity;
 import dalvinlabs.com.androidlab.design.patterns.abstractfactory.AbstractFactory;
+import dalvinlabs.com.androidlab.network.okhttp.OkHttp;
 import dalvinlabs.com.androidlab.speechrecognition.SpeechRecognitionActivity;
+
+//import java.util.Date;
+//import java.util.TimeZone;
+//import java.util.regex.Matcher;
+//import java.util.regex.Pattern;
 
 public class ScrollingActivity extends AppCompatActivity {
     private static final String LOG_TAG = ScrollingActivity.class.getSimpleName();
