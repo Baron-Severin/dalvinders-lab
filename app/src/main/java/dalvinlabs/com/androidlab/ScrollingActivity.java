@@ -19,6 +19,7 @@ import dalvinlabs.com.androidlab.deeplink.DeepLinkOptionsActivity;
 import dalvinlabs.com.androidlab.design.patterns.abstractfactory.AbstractFactory;
 import dalvinlabs.com.androidlab.network.okhttp.OkHttp;
 import dalvinlabs.com.androidlab.speechrecognition.SpeechRecognitionActivity;
+import dalvinlabs.com.androidlab.vector.VectorActivity;
 
 //import java.util.Date;
 //import java.util.TimeZone;
@@ -135,6 +136,11 @@ public class ScrollingActivity extends AppCompatActivity {
     public void onClickDeepLinks(View view) {
         Log.d(LOG_TAG, "onClickDeepLinks");
         startActivity(new Intent(this, DeepLinkOptionsActivity.class));
+    }
+
+    public void onClickVector(View view) {
+        Log.d(LOG_TAG, "onClickDeepLinks");
+        startActivity(new Intent(this, VectorActivity.class));
     }
 
     private void test() {

@@ -51,17 +51,20 @@
         <activity android:name=".deeplink.DeepLinkOptionsActivity" />
         <activity android:name=".deeplink.DeepLinkInvokeActivity">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="https"
-                    android:host="m.macys.com"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <data android:scheme="http"
-                    android:host="m.macys.com"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
+                <data
+                    android:host="m.macys.com"
+                    android:scheme="https" />
+                <data
+                    android:host="m.macys.com"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
+        <activity android:name=".vector.VectorActivity"></activity>
     </application>
 
 </manifest>
