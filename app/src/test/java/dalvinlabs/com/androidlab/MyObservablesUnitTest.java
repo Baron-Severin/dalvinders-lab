@@ -13,14 +13,21 @@ import dalvinlabs.com.androidlab.reactive.rxjava.MySingle;
 public class MyObservablesUnitTest {
 
     @Test
-    public void testJust() throws Exception {
+    public void testObservableJust() throws Exception {
         MyObservables.just();
     }
 
     @Test
-    public void testFromCallable() throws Exception {
+    public void testObservableFromCallable() throws Exception {
         MyObservables.fromCallable();
     }
+
+    @Test
+    public void testObservableFromArray() throws Exception {
+        MyObservables.fromArray();
+    }
+
+
 
     @Test
     public void testSingle() throws Exception {
@@ -32,8 +39,5 @@ public class MyObservablesUnitTest {
         Hybrids.subject();
     }
 
-    @Test
-    public void testMap() throws Exception {
-        //MyObservables.map();
-    }
+
 }

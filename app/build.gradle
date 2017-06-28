@@ -45,4 +45,5 @@ dependencies {
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     testCompile "org.mockito:mockito-core:+"
     androidTestCompile "org.mockito:mockito-android:+"
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
 }
