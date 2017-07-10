@@ -11,8 +11,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
         <activity
             android:name=".ScrollingActivity"
@@ -65,13 +66,13 @@
                 <data
                     android:host="m.macys.com"
                     android:scheme="http" />
-
                 <data
-                    android:scheme="dalvinlabs"
-                    android:host="m.macys.com"/>
+                    android:host="m.macys.com"
+                    android:scheme="dalvinlabs" />
             </intent-filter>
         </activity>
-        <activity android:name=".vector.VectorActivity"></activity>
+        <activity android:name=".vector.VectorActivity" />
+        <activity android:name=".architecture.mvc.controller.ActivityController"></activity>
     </application>
 
 </manifest>

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import dalvinlabs.com.androidlab.architecture.mvc.controller.ActivityController;
 import dalvinlabs.com.androidlab.deeplink.DeepLinkOptionsActivity;
 import dalvinlabs.com.androidlab.design.patterns.abstractfactory.AbstractFactory;
 import dalvinlabs.com.androidlab.network.okhttp.OkHttp;
@@ -46,6 +47,7 @@ public class ScrollingActivity extends AppCompatActivity {
         });
         //convertTime();
         //patterns();
+        Long.compare(2, 3);
         testAbstractFactory();
         OkHttp.run();
     }
@@ -128,6 +130,11 @@ public class ScrollingActivity extends AppCompatActivity {
         abstractFactory.createVan().build();
     }
 
+    private void test() {
+        List<Map<String, String>> data = new ArrayList<>();
+        View view = new View(this);
+    }
+
     public void onClickSpeechRecognition(View View) {
         Log.d(LOG_TAG, "onClickSpeechRecognition");
         startActivity(new Intent(this, SpeechRecognitionActivity.class));
@@ -143,10 +150,9 @@ public class ScrollingActivity extends AppCompatActivity {
         startActivity(new Intent(this, VectorActivity.class));
     }
 
-    private void test() {
-        List<Map<String, String>> data = new ArrayList<>();
-        View view = new View(this);
-
-
+    public void onClickMvc(View view) {
+        Log.d(LOG_TAG, "onClickMvc");
+        startActivity(new Intent(this, ActivityController.class));
     }
+
 }

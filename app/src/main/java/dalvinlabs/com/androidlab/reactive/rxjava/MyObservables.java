@@ -57,10 +57,12 @@ public class MyObservables {
           2. Similarly 3 methods can be provided one for each onNext, onError, onCompleted.
          */
         myObservable.subscribe(value -> {System.out.println("output = " + value);});
+        
     }
 
     public static void fromIterable() {
-        Observable<String> myObservable = Observable.fromIterable(Utils.getData()).subscribe(genericObserver);
+        //Observable<String> myObservable = Observable.fromIterable(Utils.getData()).subscribe(genericObserver);
+
     }
 
 
