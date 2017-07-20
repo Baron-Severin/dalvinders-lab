@@ -1,12 +1,8 @@
-package dalvinlabs.com.androidlab;
+package dalvinlabs.com.androidlab.algo.search;
 
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-import dalvinlabs.com.androidlab.algo.search.BinarySearch;
-
-public class AlgoUnitTest {
+public class BinarySearchTest {
     int[] input = {4, 8, 12, 16, 20, 24, 28, 32, 36, 40};
 
     @Test
