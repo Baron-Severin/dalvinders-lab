@@ -15,10 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import dalvinlabs.com.androidlab.architecture.mvc.controller.ActivityController;
 import dalvinlabs.com.androidlab.deeplink.DeepLinkOptionsActivity;
 import dalvinlabs.com.androidlab.design.patterns.abstractfactory.AbstractFactory;
 import dalvinlabs.com.androidlab.network.okhttp.OkHttp;
 import dalvinlabs.com.androidlab.speechrecognition.SpeechRecognitionActivity;
+import dalvinlabs.com.androidlab.vector.VectorActivity;
 
 //import java.util.Date;
 //import java.util.TimeZone;
@@ -45,6 +47,7 @@ public class ScrollingActivity extends AppCompatActivity {
         });
         //convertTime();
         //patterns();
+        Long.compare(2, 3);
         testAbstractFactory();
         OkHttp.run();
     }
@@ -127,6 +130,11 @@ public class ScrollingActivity extends AppCompatActivity {
         abstractFactory.createVan().build();
     }
 
+    private void test() {
+        List<Map<String, String>> data = new ArrayList<>();
+        View view = new View(this);
+    }
+
     public void onClickSpeechRecognition(View View) {
         Log.d(LOG_TAG, "onClickSpeechRecognition");
         startActivity(new Intent(this, SpeechRecognitionActivity.class));
@@ -137,10 +145,14 @@ public class ScrollingActivity extends AppCompatActivity {
         startActivity(new Intent(this, DeepLinkOptionsActivity.class));
     }
 
-    private void test() {
-        List<Map<String, String>> data = new ArrayList<>();
-        View view = new View(this);
-
-
+    public void onClickVector(View view) {
+        Log.d(LOG_TAG, "onClickDeepLinks");
+        startActivity(new Intent(this, VectorActivity.class));
     }
+
+    public void onClickMvc(View view) {
+        Log.d(LOG_TAG, "onClickMvc");
+        startActivity(new Intent(this, ActivityController.class));
+    }
+
 }
