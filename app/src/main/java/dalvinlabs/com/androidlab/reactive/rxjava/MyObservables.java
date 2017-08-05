@@ -10,8 +10,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MyObservables {
 
-    private static final String LOG_TAG = MyObservables.class.getSimpleName();
-
     private static Observer<List<String>> genericObserver = new Observer<List<String>>() {
         @Override
         public void onSubscribe(Disposable d) {
@@ -38,6 +36,8 @@ public class MyObservables {
         }
     };
 
+    // # # # # # CREATE
+
     /*
         Observables and Observer runs on a same thread.
         just emits single item i.e. in this case whole list.
@@ -56,15 +56,9 @@ public class MyObservables {
           1. Instead of providing a subscriber, single method can be provided just to get onNext().
           2. Similarly 3 methods can be provided one for each onNext, onError, onCompleted.
          */
-        myObservable.subscribe(value -> {System.out.println("output = " + value);});
+        myObservable.subscribe(value -> System.out.println("output = " + value));
         
     }
-
-    public static void fromIterable() {
-        //Observable<String> myObservable = Observable.fromIterable(Utils.getData()).subscribe(genericObserver);
-
-    }
-
 
     /*
         Observables and Observer runs on a separate threads.
@@ -79,6 +73,11 @@ public class MyObservables {
                 //.observeOn(AndroidSchedulers.mainThread()) For ANDROID use Android Schedulers.
                 .observeOn(Schedulers.newThread()) // For ease of unit test, this is used
                 .subscribe(genericObserver);
+    }
+
+    public static void fromIterable() {
+        Observable<String> myObservable = Observable.fromIterable(Utils.getData());
+        myObservable.subscribe(value -> System.out.println("output = " + value));
     }
 
 

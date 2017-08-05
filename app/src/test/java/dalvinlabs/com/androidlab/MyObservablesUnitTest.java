@@ -18,13 +18,18 @@ public class MyObservablesUnitTest {
     }
 
     @Test
+    public void testObservableFromArray() throws Exception {
+        MyObservables.fromArray();
+    }
+
+    @Test
     public void testObservableFromCallable() throws Exception {
         MyObservables.fromCallable();
     }
 
     @Test
-    public void testObservableFromArray() throws Exception {
-        MyObservables.fromArray();
+    public void testObservableFromIterable() throws Exception {
+        MyObservables.fromIterable();
     }
 
 
