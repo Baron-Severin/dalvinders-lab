@@ -101,7 +101,6 @@ public class MyObservables {
           2. Similarly 3 methods can be provided one for each onNext, onError, onCompleted.
          */
         myObservable.subscribe(value -> System.out.println("output = " + value));
-        
     }
 
     /*
@@ -112,7 +111,6 @@ public class MyObservables {
                     System.out.println("call, thread = " + Thread.currentThread().getName());
                     return Utils.getData();
                 });
-
         myObservable.subscribeOn(Schedulers.io())
                 //.observeOn(AndroidSchedulers.mainThread()) For ANDROID use Android Schedulers.
                 .observeOn(Schedulers.newThread()) // For ease of unit test, this is used
@@ -175,5 +173,7 @@ public class MyObservables {
         });
         myObservable.subscribe(genericObserver1);
     }
+
+
 
 }
