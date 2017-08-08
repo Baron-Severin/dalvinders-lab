@@ -2,14 +2,11 @@ package dalvinlabs.com.androidlab.reactive.rxjava;
 
 
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import io.reactivex.Emitter;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -40,12 +37,15 @@ public class MyObservables {
 
         @Override
         public void onError(Throwable e) {
-            System.out.println("genericObserver1 :: onError = " + e.getMessage());
+            System.out.println("genericObserver1 :: onError = " + e);
+            e.printStackTrace();
+            System.out.println("-----");
         }
 
         @Override
         public void onComplete() {
             System.out.println("genericObserver1 :: onComplete");
+            System.out.println("-----");
         }
     };
 
@@ -134,8 +134,8 @@ public class MyObservables {
     }
 
     /*
-        Create observable
-        TODO : more understanding required
+        1. Create custom observable, code is responsible for calling onNext, onComplete|onError.
+        2. Observable is NOT created until subscription similar to "defer"
      */
     public static void create() {
         Observable<String> myObservable = Observable.create((emitter) -> {
@@ -148,6 +148,36 @@ public class MyObservables {
         myObservable.subscribe(genericObserver1);
         System.out.println("-----");
         myObservable.subscribe(genericObserver2);
+    }
+
+    /*
+        1. Defer the creation of observable until subscription.
+        2. Better than "create" because it uses built in operators.
+     */
+    public static void defer() {
+        class Data {
+            private String value = "abc";
+        }
+
+        final Data data = new Data();
+
+        // Other observables gets created immediately e.g.
+        Observable<String> myObservable = Observable.just(data.value);
+        // Modify the data
+        data.value = "xyz";
+        // Even though data is modified, observer will get old data "abc"
+        myObservable.subscribe(genericObserver1);
+
+        data.value = "abc";
+        myObservable = Observable.defer(() -> {
+            System.out.println("defer supplier going to create observable");
+            return Observable.just(data.value);
+        });
+        // modify data
+        data.value = "xyz";
+        // Because of defer, observable will be created upon subscription, hence it will get the
+        // modified data
+        myObservable.subscribe(genericObserver1);
     }
 
     /*
@@ -166,14 +196,19 @@ public class MyObservables {
     }
 
 
-    public static void defer() {
-        Observable<String> myObservable = Observable.defer(() -> {
-            System.out.println("defer supplier going to create observable");
-            return Observable.just("abc");
-        });
-        myObservable.subscribe(genericObserver1);
-    }
 
+    /*
+        Stack trace test
+        It does print stack trace for this simple observable.
+        TODO: Try this with multiple observables and operators
+     */
+    public static void stackTrace() {
+        Observable<String> myObservable = Observable.fromCallable(() -> {
+            Object value = null;
+            return value.toString();
+        });
+        myObservable.subscribe(item -> System.out.println("output = " + item));
+    }
 
 
 }

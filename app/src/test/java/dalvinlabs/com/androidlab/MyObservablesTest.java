@@ -53,4 +53,9 @@ public class MyObservablesTest {
     public void testObservableDefer() throws Exception {
         MyObservables.defer();
     }
+
+    @Test
+    public void testObservableStackTrace() throws Exception {
+        MyObservables.stackTrace();
+    }
 }
