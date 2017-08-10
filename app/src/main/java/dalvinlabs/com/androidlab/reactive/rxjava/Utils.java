@@ -21,4 +21,13 @@ public class Utils {
         return data;
     }
 
+    public static List<String> getLargeData() {
+        List<String> data = new ArrayList<>();
+        Random random = new Random(1);
+        for (int i = 0; i < 1000; i++) {
+            data.add(Integer.toString(random.nextInt()));
+        }
+        return data;
+    }
+
 }

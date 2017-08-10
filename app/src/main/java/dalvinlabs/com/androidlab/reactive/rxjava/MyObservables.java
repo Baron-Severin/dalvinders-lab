@@ -2,6 +2,8 @@ package dalvinlabs.com.androidlab.reactive.rxjava;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -10,10 +12,12 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class MyObservables {
@@ -36,6 +40,7 @@ public class MyObservables {
         @Override
         public void onNext(T value) {
             System.out.println("MyObserver :: onNext");
+            System.out.println("T = " + value.getClass());
             System.out.println("thread = " + Thread.currentThread().getName());
             System.out.println("output = " + value);
             System.out.println("-----");
@@ -379,16 +384,31 @@ public class MyObservables {
 
         List<String> data = Utils.getData();
 
-        Observable.fromIterable(data).buffer(3).subscribe(new MyObserver<>());
+        //Observable.fromIterable(data).buffer(3).subscribe(new MyObserver<>());
 
-        Observable.fromIterable(data).buffer(2, 3)
-                .subscribe(new MyObserver<>());
+        //Observable.fromIterable(data).buffer(2, 3).subscribe(new MyObserver<>());
 
-        Observable.fromIterable(data).buffer(2, 3, () -> new ArrayList<>());
+        //Observable.fromIterable(data).buffer(2, 3, ArrayList::new).subscribe(new MyObserver<>());
 
+        //Observable.fromIterable(data).buffer(2, HashSet::new).subscribe(new MyObserver<>());
 
-        Observable.fromIterable(Utils.getData()).buffer(1l, TimeUnit.MICROSECONDS)
-                .subscribe(new MyObserver<>());
+        /*
+            Opening and closing window defined
+         */
+        //data = Utils.getLargeData();
+        Observable.fromIterable(data).buffer((observer) -> {
+            System.out.println("opening");
+            // Starts buffer collection window
+            // For every onNext a buffer window is created.
+            observer.onNext("opening-1");
+            observer.onNext("opening-2");
+        }, (value) -> {
+            System.out.println("closing, value = " + value);
+            // Closes buffer collection window
+            // Gets invoked for each onNext in opening indicator
+            return Observable.just(value).delay(100l, TimeUnit.MICROSECONDS);
+        }, HashSet::new).subscribe(new MyObserver<>());
+
 
 
     }

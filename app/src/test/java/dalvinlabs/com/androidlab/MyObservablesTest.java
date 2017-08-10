@@ -119,7 +119,9 @@ public class MyObservablesTest {
 
     @Test
     public void testBuffer() throws Exception {
+        CountDownLatch latch = new CountDownLatch(1);
         MyObservables.buffer();
+        latch.await(30l, TimeUnit.SECONDS);
     }
 
     @Test
