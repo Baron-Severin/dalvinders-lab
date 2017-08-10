@@ -1,6 +1,7 @@
 package dalvinlabs.com.androidlab.reactive.rxjava;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -9,12 +10,10 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class MyObservables {
@@ -118,7 +117,8 @@ public class MyObservables {
             System.out.println("consumerList :: accept = " + data.toString());
 
 
-    // # # # OBSERVABLES
+    // # # # OBSERVABLES : CREATE
+
     /*
         Observables and Observer runs on a same thread.
         just emits single item i.e. in this case whole list.
@@ -359,13 +359,49 @@ public class MyObservables {
         }).subscribe(new MyObserver<>());
     }
 
+    /*
+        1. Repeat until terminal conditions i.e. onComplete or onError
+        2. In this case 3 tries with 1 second delay.
+     */
     public static void repeatWhen() {
-        Observable.just("abc").repeatWhen(new Function<Observable<Object>, ObservableSource<?>>() {
-            @Override
-            public ObservableSource<?> apply(Observable<Object> objectObservable) throws Exception {
-                return null;
-            }
-        });
+        Observable.fromArray("abc", "def", "ghi").
+                repeatWhen((objectObservable -> {
+                    System.out.println("repeatWhen delay");
+                    return objectObservable.delay(1l, TimeUnit.SECONDS).take(3);
+                })).subscribeOn(Schedulers.io()).subscribe(new MyObserver<>());
+
     }
+
+
+    // # # # OBSERVABLES : TRANSFORMING
+
+    public static void buffer() {
+
+        List<String> data = Utils.getData();
+
+        Observable.fromIterable(data).buffer(3).subscribe(new MyObserver<>());
+
+        Observable.fromIterable(data).buffer(2, 3)
+                .subscribe(new MyObserver<>());
+
+        Observable.fromIterable(data).buffer(2, 3, () -> new ArrayList<>());
+
+
+        Observable.fromIterable(Utils.getData()).buffer(1l, TimeUnit.MICROSECONDS)
+                .subscribe(new MyObserver<>());
+
+
+    }
+
+    public static void merge() {
+        Observable<String> a = Observable.just("abc");
+        Observable<Integer> b = Observable.just(123);
+
+        Observable.zip(a, b, (c, d) -> {
+            return (String) c+d;
+        }).subscribe(new MyObserver<>());
+    }
+
+
 
 }

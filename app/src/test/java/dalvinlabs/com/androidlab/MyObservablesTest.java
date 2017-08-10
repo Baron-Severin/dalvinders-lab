@@ -110,4 +110,20 @@ public class MyObservablesTest {
         MyObservables.repeatUntil();
     }
 
+    @Test
+    public void testRepeatWhen() throws Exception {
+        CountDownLatch latch = new CountDownLatch(1);
+        MyObservables.repeatWhen();
+        latch.await(1l, TimeUnit.MINUTES);
+    }
+
+    @Test
+    public void testBuffer() throws Exception {
+        MyObservables.buffer();
+    }
+
+    @Test
+    public void testMerge() throws Exception {
+        MyObservables.merge();
+    }
 }

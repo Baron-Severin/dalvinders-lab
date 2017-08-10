@@ -1,12 +1,14 @@
 package dalvinlabs.com.androidlab.reactive.rxjava;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class Utils {
 
     public static List<String> getData() {
-        String[] data = {"ABC", "XYZ"};
+        String[] data = {"ABC", "DEF", "GHI", "JKL", "MNO", "PQR"};
         return Arrays.asList(data);
     }
 
@@ -18,6 +20,5 @@ public class Utils {
         });
         return data;
     }
-
 
 }
