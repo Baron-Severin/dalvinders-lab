@@ -384,18 +384,17 @@ public class MyObservables {
 
         List<String> data = Utils.getData();
 
-        //Observable.fromIterable(data).buffer(3).subscribe(new MyObserver<>());
+        Observable.fromIterable(data).buffer(3).subscribe(new MyObserver<>());
 
-        //Observable.fromIterable(data).buffer(2, 3).subscribe(new MyObserver<>());
+        Observable.fromIterable(data).buffer(2, 3).subscribe(new MyObserver<>());
 
-        //Observable.fromIterable(data).buffer(2, 3, ArrayList::new).subscribe(new MyObserver<>());
+        Observable.fromIterable(data).buffer(2, 3, ArrayList::new).subscribe(new MyObserver<>());
 
-        //Observable.fromIterable(data).buffer(2, HashSet::new).subscribe(new MyObserver<>());
+        Observable.fromIterable(data).buffer(2, HashSet::new).subscribe(new MyObserver<>());
 
         /*
-            Opening and closing window defined
+            Opening and closing windows defined
          */
-        //data = Utils.getLargeData();
         Observable.fromIterable(data).buffer((observer) -> {
             System.out.println("opening");
             // Starts buffer collection window
@@ -409,6 +408,22 @@ public class MyObservables {
             return Observable.just(value).delay(100l, TimeUnit.MICROSECONDS);
         }, HashSet::new).subscribe(new MyObserver<>());
 
+        /*
+            Buffer with boundary observable
+         */
+        Observable.fromIterable(data).buffer((Observer<? super Integer> observer) -> {
+            System.out.println("onNext - 1");
+            observer.onNext(1);
+            observer.onNext(2);
+        }).subscribe(new MyObserver<>());
+
+        /*
+            1. Buffer with boundary observable by providing some other in built observable
+            2. Create a buffer of 100 Microseconds
+         */
+        Observable.fromIterable(data)
+                .buffer(Observable.interval(100L, TimeUnit.MICROSECONDS))
+                .subscribe(new MyObserver<>());
 
 
     }
