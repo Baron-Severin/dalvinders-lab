@@ -119,13 +119,74 @@ public class MyObservablesTest {
 
     @Test
     public void testBuffer() throws Exception {
-        CountDownLatch latch = new CountDownLatch(1);
         MyObservables.buffer();
-        latch.await(30l, TimeUnit.SECONDS);
     }
 
     @Test
-    public void testMerge() throws Exception {
-        MyObservables.merge();
+    public void testFlatMap() throws Exception {
+        MyObservables.flatMap();
     }
+
+    @Test
+    public void testFlatMapDelayError() throws Exception {
+        MyObservables.flatMapDelayError(true);
+    }
+
+    @Test
+    public void testFlatMapDontDelayError() throws Exception {
+        MyObservables.flatMapDelayError(false);
+    }
+
+    @Test
+    public void testFlatMapMaxConcurrency() throws Exception {
+        MyObservables.flatMapMaxConcurrency();
+    }
+
+    @Test
+    public void testFlatMapBufferSize() throws Exception {
+        MyObservables.flatMapBufferSize();
+    }
+
+    @Test
+    public void testFlatMapNotificationMappers() throws Exception {
+        MyObservables.flatMapNotificationMappers();
+    }
+
+    @Test
+    public void testFlatMapWithResultSelector() throws Exception {
+        MyObservables.flatMapWithResultSelector();
+    }
+
+    @Test
+    public void testFlatMapIterable() throws Exception {
+        MyObservables.flatMapIterable();
+    }
+
+    @Test
+    public void testConcatMap() throws Exception {
+        MyObservables.concatMap();
+    }
+
+    @Test
+    public void testConcatMapDelayError() throws Exception {
+        MyObservables.concatMapDelayError(true);
+    }
+
+    @Test
+    public void testConcatMapDontDelayError() throws Exception {
+        MyObservables.concatMapDelayError(false);
+    }
+
+    @Test
+    public void testSwitchMap() throws Exception {
+        MyObservables.switchMap();
+    }
+
+    @Test
+    public void justLikeThat() throws Exception {
+        String text = String.valueOf(-1);
+        System.out.println("text = " + text);
+    }
+
+
 }

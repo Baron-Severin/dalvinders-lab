@@ -2,7 +2,6 @@ package dalvinlabs.com.androidlab.reactive.rxjava;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -12,12 +11,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
+import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class MyObservables {
@@ -28,12 +26,20 @@ public class MyObservables {
 
     private static class MyObserver<T> implements Observer<T> {
 
+        CountDownLatch mLatch;
+        long startTime = 0L;
+
         MyObserver() {
 
         }
 
+        MyObserver(CountDownLatch latch) {
+            mLatch = latch;
+        }
+
         @Override
         public void onSubscribe(Disposable d) {
+            startTime = System.currentTimeMillis();
             System.out.println("MyObserver :: onSubscribe");
         }
 
@@ -55,7 +61,11 @@ public class MyObservables {
         @Override
         public void onComplete() {
             System.out.println("MyObserver :: onComplete");
+            System.out.println("Time taken milliseconds = " + (System.currentTimeMillis() - startTime));
             System.out.println("-----");
+            if (mLatch != null) {
+                mLatch.countDown();
+            }
         }
     }
 
@@ -384,13 +394,18 @@ public class MyObservables {
 
         List<String> data = Utils.getData();
 
-        Observable.fromIterable(data).buffer(3).subscribe(new MyObserver<>());
+        int numberOfBuffers = 11;
 
-        Observable.fromIterable(data).buffer(2, 3).subscribe(new MyObserver<>());
+        CountDownLatch latch = new CountDownLatch(numberOfBuffers);
 
-        Observable.fromIterable(data).buffer(2, 3, ArrayList::new).subscribe(new MyObserver<>());
 
-        Observable.fromIterable(data).buffer(2, HashSet::new).subscribe(new MyObserver<>());
+        Observable.fromIterable(data).buffer(3).subscribe(new MyObserver<>(latch));
+
+        Observable.fromIterable(data).buffer(2, 3).subscribe(new MyObserver<>(latch));
+
+        Observable.fromIterable(data).buffer(2, 3, ArrayList::new).subscribe(new MyObserver<>(latch));
+
+        Observable.fromIterable(data).buffer(2, HashSet::new).subscribe(new MyObserver<>(latch));
 
         /*
             Opening and closing windows defined
@@ -406,7 +421,7 @@ public class MyObservables {
             // Closes buffer collection window
             // Gets invoked for each onNext in opening indicator
             return Observable.just(value).delay(100l, TimeUnit.MICROSECONDS);
-        }, HashSet::new).subscribe(new MyObserver<>());
+        }, HashSet::new).subscribe(new MyObserver<>(latch));
 
         /*
             Buffer with boundary observable
@@ -415,7 +430,7 @@ public class MyObservables {
             System.out.println("onNext - 1");
             observer.onNext(1);
             observer.onNext(2);
-        }).subscribe(new MyObserver<>());
+        }).subscribe(new MyObserver<>(latch));
 
         /*
             1. Buffer with boundary observable by providing some other in built observable
@@ -423,19 +438,251 @@ public class MyObservables {
          */
         Observable.fromIterable(data)
                 .buffer(Observable.interval(100L, TimeUnit.MICROSECONDS))
+                .subscribe(new MyObserver<>(latch));
+
+        Observable.fromIterable(data)
+                .buffer(Observable.interval(100L, TimeUnit.MICROSECONDS), 4)
+                .subscribe(new MyObserver<>(latch));
+
+        Observable.fromIterable(data)
+                .buffer(Observable.interval(100L, TimeUnit.MICROSECONDS), () -> {
+                    return new HashSet<>();
+                }).subscribe(new MyObserver<>(latch));
+
+
+        /*
+            Boundary supplier is being passed from callable.
+         */
+        Observable.fromIterable(data)
+                .buffer(() -> Observable.interval(100L, TimeUnit.MICROSECONDS))
+                .subscribe(new MyObserver<>(latch));
+
+
+        Observable.fromIterable(data)
+                .buffer(() -> Observable.interval(100L, TimeUnit.MICROSECONDS), HashSet::new)
+                .subscribe(new MyObserver<>(latch));
+
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void flatMap() {
+        /*
+            1. Function is applied on each item of data.
+            2. Function returns an observable which emits 2 modified items.
+            3. Emissions of all observables of all modified items are combined into an observable.
+         */
+        List<String> data = Utils.getData();
+        Observable.fromIterable(data)
+                .flatMap((item) -> Observable.just(item + " flat mapped").repeat(2)
+                ).subscribe(new MyObserver<>());
+    }
+
+    public static void flatMapDelayError(boolean isDelayError) {
+        List<String> data = Utils.getData();
+        Observable.fromIterable(data)
+                .flatMap((item) -> {
+                            if (item.equalsIgnoreCase("def")) {
+                                return Observable.error(new Throwable("Just for test item = " + item));
+                            } else {
+                                return Observable.just(item + " flat mapped").repeat(2);
+                            }
+                        }, isDelayError
+                ).subscribe(new MyObserver<>());
+    }
+
+
+    public static void flatMapMaxConcurrency() {
+        List<String> data = Utils.getData();
+        Observable.fromIterable(data)
+                .flatMap((item) -> Observable.just(item + " flat mapped").repeat(10000), 100)
+                .doOnNext((item) -> System.out.println("doOnNext Thread = " + Thread.currentThread().getName()))
+                .subscribe(new MyObserver<>());
+    }
+
+    public static void flatMapBufferSize() {
+        List<String> data = Utils.getData();
+        Observable.fromIterable(data)
+                .flatMap((item) -> Observable.just(item + " flat mapped")
+                        .repeat(10000), true, 100, 100)
+                .subscribe(new MyObserver<>());
+    }
+
+    public static void flatMapNotificationMappers() {
+        /*
+            1. Provides functions to emit observables for onError and onComplete also
+            2. Since source is emitting an error for item "def"
+            3. Flat map's errorMapper will emit observable
+         */
+        List<String> data = Utils.getData();
+        Observable.create((stringEmitter) -> {
+            for (String each : data) {
+                if (!stringEmitter.isDisposed()) {
+                    if (each.equalsIgnoreCase("def")) {
+                        stringEmitter.onError(new Throwable("Just for test item = " + each));
+                    } else {
+                        stringEmitter.onNext(each);
+                    }
+                }
+            }
+            stringEmitter.onComplete();
+        })
+        .flatMap((item) -> Observable.just(item + " flat mapped").repeat(2)
+                , (error) -> Observable.just("error flat mapped = " + error).repeat(2)
+                , () -> Observable.just("completed flat mapped").repeat(2))
+                .subscribe(new MyObserver<>());
+
+
+        /*
+            1. Since here source is not emitting any error
+            2. Flat map's completeMapper will emit observable
+         */
+        Observable.fromIterable(data)
+                .flatMap((item) -> Observable.just(item + " flat mapped").repeat(2)
+                , (error) -> Observable.just("error flat mapped = " + error).repeat(2)
+                , () -> Observable.just("completed flat mapped").repeat(2))
+                .subscribe(new MyObserver<>());
+    }
+
+    public static void flatMapWithResultSelector() {
+        List<String> data = Utils.getData();
+        /*
+            Combining actual emit item with transformed emit item
+         */
+        Observable.fromIterable(data)
+                .flatMap((item) -> Observable.just(item + " from inner").repeat(2)
+                        , (source, inner) -> "Combining source & inner = " + source + " : " + inner)
+                .subscribe(new MyObserver<>());
+    }
+
+    public static void flatMapIterable() {
+        List<String> data = Utils.getData();
+        /*
+            Returns iterable instead of inner observable
+         */
+        Observable.fromIterable(data)
+                .flatMapIterable((item) -> {
+                    List<String> iterable = new ArrayList<>();
+                    iterable.add(item + "-1");
+                    iterable.add(item + "-2");
+                    return iterable;
+                }).subscribe(new MyObserver<>());
+    }
+
+    public static void concatMap() {
+        /*
+            Similar to flat map but preserve the order
+         */
+        List<String> data = Utils.getData();
+        Observable.fromIterable(data)
+                .concatMap((item) -> Observable.just(item + " concat mapped").repeat(2)
+                ).subscribe(new MyObserver<>());
+    }
+
+    public static void concatMapDelayError(boolean isDelayError) {
+        List<String> data = Utils.getData();
+        /*
+            Delay any error till the end
+         */
+        Observable.fromIterable(data)
+                .concatMapDelayError((item) -> {
+                            if (item.equalsIgnoreCase("def")) {
+                                return Observable.error(new Throwable("Just for test item = " + item));
+                            } else {
+                                return Observable.just(item + " flat mapped").repeat(2);
+                            }
+                        }, 1,isDelayError)
+                .subscribe(new MyObserver<>());
+    }
+
+    public static void switchMap() {
+        Observable<String> firstSource = Observable.create((emitter) -> {
+            try {
+                if (emitter.isDisposed()) {
+                    emitter.onComplete();
+                } else {
+                    emitter.onNext("First Observable - 1");
+                    emitter.onNext("First Observable - 2");
+                }
+            } catch (Exception e) {
+                emitter.onError(e);
+            }
+            emitter.onComplete();
+        });
+
+        Observable<String> secondSource = Observable.create((emitter) -> {
+            try {
+                if (emitter.isDisposed()) {
+                    emitter.onComplete();
+                } else {
+                    emitter.onNext("Second Observable - 1");
+                    emitter.onNext("Second Observable - 2");
+                }
+            } catch (Exception e) {
+                emitter.onError(e);
+            }
+            emitter.onComplete();
+        });
+
+        Observable<String> thirdSource = Observable.create((emitter) -> {
+            try {
+                if (emitter.isDisposed()) {
+                    emitter.onComplete();
+                } else {
+                    emitter.onNext("third Observable - 1");
+                    emitter.onNext("third Observable - 2");
+                }
+            } catch (Exception e) {
+                emitter.onError(e);
+            }
+            emitter.onComplete();
+        });
+
+        List<Observable> apis = new ArrayList<>();
+        apis.add(firstSource);
+        apis.add(secondSource);
+        apis.add(thirdSource);
+
+        class Data {
+            private int value = -1;
+        }
+
+        Data data = new Data();
+
+        /*
+            1. outer observable only emits items from most recent inner observable.
+            2. In this case "second" observable got delayed to emit items and "third" starting
+            emitting items so therefore items from "second" got ignored.
+         */
+
+        Observable.fromIterable(apis)
+                .switchMap((item) -> {
+            data.value ++ ;
+            if (data.value == 1) {
+                System.out.println("Delaying observable = " + item);
+                return item.delay(1000L, TimeUnit.MICROSECONDS);
+            } else {
+                return item;
+            }
+        }).subscribe(new MyObserver<>());
+
+        System.out.println("# # # # #");
+
+        /*
+            Same as above but instead of observable it returns single
+         */
+        Observable.fromIterable(Utils.getData())
+                .switchMapSingle(Single::just)
                 .subscribe(new MyObserver<>());
 
 
     }
 
-    public static void merge() {
-        Observable<String> a = Observable.just("abc");
-        Observable<Integer> b = Observable.just(123);
 
-        Observable.zip(a, b, (c, d) -> {
-            return (String) c+d;
-        }).subscribe(new MyObserver<>());
-    }
+
 
 
 

@@ -35,4 +35,5 @@ public class MySingle {
         Single<List<String>> myObservable = Single.just(Utils.getData()).map(Utils::transform);
         myObservable.subscribe(singleObserver);
     }
+
 }
