@@ -183,6 +183,21 @@ public class MyObservablesTest {
     }
 
     @Test
+    public void testGroupBy() throws Exception {
+        MyObservables.groupBy();
+    }
+
+    @Test
+    public void testMap() throws Exception {
+        MyObservables.map();
+    }
+
+    @Test
+    public void testCast() throws Exception {
+        MyObservables.cast();
+    }
+
+    @Test
     public void justLikeThat() throws Exception {
         String text = String.valueOf(-1);
         System.out.println("text = " + text);

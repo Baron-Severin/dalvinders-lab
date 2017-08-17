@@ -16,6 +16,8 @@ import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.observables.GroupedObservable;
 import io.reactivex.schedulers.Schedulers;
 
 public class MyObservables {
@@ -27,10 +29,15 @@ public class MyObservables {
     private static class MyObserver<T> implements Observer<T> {
 
         CountDownLatch mLatch;
+        String mName;
         long startTime = 0L;
 
         MyObserver() {
 
+        }
+
+        MyObserver(String name) {
+            mName = name;
         }
 
         MyObserver(CountDownLatch latch) {
@@ -40,11 +47,17 @@ public class MyObservables {
         @Override
         public void onSubscribe(Disposable d) {
             startTime = System.currentTimeMillis();
+            if (mName != null) {
+                System.out.println("MyObserver :: name = " + mName);
+            }
             System.out.println("MyObserver :: onSubscribe");
         }
 
         @Override
         public void onNext(T value) {
+            if (mName != null) {
+                System.out.println("MyObserver :: name = " + mName);
+            }
             System.out.println("MyObserver :: onNext");
             System.out.println("T = " + value.getClass());
             System.out.println("thread = " + Thread.currentThread().getName());
@@ -54,12 +67,18 @@ public class MyObservables {
 
         @Override
         public void onError(Throwable e) {
+            if (mName != null) {
+                System.out.println("MyObserver :: name = " + mName);
+            }
             System.out.println("MyObserver :: onError = " + e);
             System.out.println("-----");
         }
 
         @Override
         public void onComplete() {
+            if (mName != null) {
+                System.out.println("MyObserver :: name = " + mName);
+            }
             System.out.println("MyObserver :: onComplete");
             System.out.println("Time taken milliseconds = " + (System.currentTimeMillis() - startTime));
             System.out.println("-----");
@@ -658,6 +677,8 @@ public class MyObservables {
             emitting items so therefore items from "second" got ignored.
          */
 
+        System.out.println("# 1");
+
         Observable.fromIterable(apis)
                 .switchMap((item) -> {
             data.value ++ ;
@@ -669,17 +690,123 @@ public class MyObservables {
             }
         }).subscribe(new MyObserver<>());
 
-        System.out.println("# # # # #");
+        System.out.println("# 2");
+
+        /*
+            Same as above but error is delayed until most recent observable completes.
+         */
+
+        data.value = 0;
+
+        Observable.fromIterable(apis)
+                .switchMapDelayError((item) -> {
+                    data.value ++ ;
+                    if (data.value == 1) {
+                        System.out.println("observable error = " + item.getClass().getSimpleName());
+                        return Observable.error(new Throwable("Just for test, item = "
+                                + item.getClass().getSimpleName()));
+                    } else {
+                        return item;
+                    }
+                }).subscribe(new MyObserver<>());
+
+        System.out.println("# 3");
 
         /*
             Same as above but instead of observable it returns single
          */
+
         Observable.fromIterable(Utils.getData())
                 .switchMapSingle(Single::just)
                 .subscribe(new MyObserver<>());
 
+        System.out.println("# 4");
+
+        /*
+            Same as above but delay the error until most recent inner observable completes
+         */
+
+        Observable.fromIterable(Utils.getData())
+                .switchMapSingleDelayError((item) -> {
+                    if (item.equalsIgnoreCase("def")) {
+                        return Single.error(new Throwable("Just for test, item = " + item));
+                    } else {
+                        return Single.just(item);
+                    }
+                }).subscribe(new MyObserver<>());
 
     }
+
+    public static void groupBy() {
+        List<String> data = Utils.getAlphaNumericData();
+        Observable.fromIterable(data).groupBy((item) -> {
+            try {
+                int a = Integer.parseInt(item);
+                return 1000;
+            } catch (NumberFormatException e) {
+                return 2000;
+            }
+        }).subscribe((groupedObservable) ->
+                groupedObservable
+                        .subscribe(new MyObserver<>(groupedObservable.getKey().toString())));
+
+
+        System.out.println("# 2");
+
+        /*
+            Same as above but second function is provided to modify the item values as well.
+         */
+
+        Observable.fromIterable(data).groupBy((item) -> {
+            try {
+                int a = Integer.parseInt(item);
+                return 1000;
+            } catch (NumberFormatException e) {
+                return 2000;
+            }
+        }, (item) -> "Modified = " + item)
+                .subscribe((groupedObservable) ->
+                groupedObservable
+                        .subscribe(new MyObserver<>(groupedObservable.getKey().toString())));
+    }
+
+    public static void map() {
+        Observable.fromIterable(Utils.getData()).map((item) -> "Modified by map = " + item)
+                .subscribe(new MyObserver<>());
+    }
+
+    public static void cast() {
+
+        class Parent {
+            @Override
+            public String toString() {
+                return "Parent Value";
+            }
+        }
+
+        class Source extends Parent{
+            @Override
+            public String toString() {
+                return "Source Value";
+            }
+        }
+
+        List<Source> data = new ArrayList<>();
+        data.add(new Source());
+
+        /*
+            Type casting a child object to it's parent class object
+         */
+
+        Observable.fromIterable(data)
+                .cast(Parent.class)
+                .subscribe(new MyObserver<>());
+    }
+
+
+
+
+
 
 
 

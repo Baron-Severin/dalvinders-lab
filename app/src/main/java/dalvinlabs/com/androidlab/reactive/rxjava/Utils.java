@@ -12,6 +12,11 @@ public class Utils {
         return Arrays.asList(data);
     }
 
+    public static List<String> getAlphaNumericData() {
+        String[] data = {"ABC", "123", "DEF", "456", "GHI", "789", "JKL", "MNO", "PQR"};
+        return Arrays.asList(data);
+    }
+
     public static List<String> transform(List<String> data) {
         System.out.println("transform()");
         data.forEach((each) -> {
@@ -29,5 +34,9 @@ public class Utils {
         }
         return data;
     }
+
+
+
+
 
 }
