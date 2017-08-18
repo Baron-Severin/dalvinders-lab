@@ -198,10 +198,33 @@ public class MyObservablesTest {
     }
 
     @Test
-    public void justLikeThat() throws Exception {
-        String text = String.valueOf(-1);
-        System.out.println("text = " + text);
+    public void testScan() throws Exception {
+        MyObservables.scan();
     }
 
+    @Test
+    public void testWithInitialValue() throws Exception {
+        MyObservables.scanWithInitialValue();
+    }
+
+    @Test
+    public void testCompose() throws Exception {
+        MyObservables.compose();
+    }
+
+    @Test
+    public void testWindow() throws Exception {
+        MyObservables.window();
+    }
+
+    @Test
+    public void testDebounce() throws Exception {
+        MyObservables.debounce();
+    }
+
+    @Test
+    public void test() throws Exception {
+
+    }
 
 }

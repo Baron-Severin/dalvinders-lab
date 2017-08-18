@@ -16,8 +16,6 @@ import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.observables.GroupedObservable;
 import io.reactivex.schedulers.Schedulers;
 
 public class MyObservables {
@@ -151,7 +149,11 @@ public class MyObservables {
             System.out.println("consumerList :: accept = " + data.toString());
 
 
-    // # # # OBSERVABLES : CREATE
+    /*
+         ##########################
+         # # # OBSERVABLES : CREATE
+         ##########################
+    */
 
     /*
         Observables and Observer runs on a same thread.
@@ -350,7 +352,7 @@ public class MyObservables {
         By default runs on computation thread.
      */
     public static void interval(final CountDownLatch latch) {
-        Observable<Long> myObservable = Observable.interval(0l, 30l,
+        Observable<Long> myObservable = Observable.interval(0L, 30L,
                 TimeUnit.MILLISECONDS);
         myObservable.subscribe(item -> System.out.println("output = " + item),
                 throwable -> {
@@ -367,7 +369,7 @@ public class MyObservables {
         By default runs on computation thread.
      */
     public static void intervalRange() {
-        Observable.intervalRange(0l, 10l, 0l, 10l, TimeUnit.MILLISECONDS).
+        Observable.intervalRange(0L, 10L, 0L, 10L, TimeUnit.MILLISECONDS).
                 subscribe(new MyObserver<>());
     }
 
@@ -401,13 +403,17 @@ public class MyObservables {
         Observable.fromArray("abc", "def", "ghi").
                 repeatWhen((objectObservable -> {
                     System.out.println("repeatWhen delay");
-                    return objectObservable.delay(1l, TimeUnit.SECONDS).take(3);
+                    return objectObservable.delay(1L, TimeUnit.SECONDS).take(3);
                 })).subscribeOn(Schedulers.io()).subscribe(new MyObserver<>());
 
     }
 
 
-    // # # # OBSERVABLES : TRANSFORMING
+    /*
+         ##########################
+         # # # OBSERVABLES : TRANSFORM
+         ##########################
+    */
 
     public static void buffer() {
 
@@ -439,7 +445,7 @@ public class MyObservables {
             System.out.println("closing, value = " + value);
             // Closes buffer collection window
             // Gets invoked for each onNext in opening indicator
-            return Observable.just(value).delay(100l, TimeUnit.MICROSECONDS);
+            return Observable.just(value).delay(100L, TimeUnit.MICROSECONDS);
         }, HashSet::new).subscribe(new MyObserver<>(latch));
 
         /*
@@ -464,9 +470,8 @@ public class MyObservables {
                 .subscribe(new MyObserver<>(latch));
 
         Observable.fromIterable(data)
-                .buffer(Observable.interval(100L, TimeUnit.MICROSECONDS), () -> {
-                    return new HashSet<>();
-                }).subscribe(new MyObserver<>(latch));
+                .buffer(Observable.interval(100L, TimeUnit.MICROSECONDS), () -> new HashSet<>())
+                .subscribe(new MyObserver<>(latch));
 
 
         /*
@@ -742,6 +747,7 @@ public class MyObservables {
         Observable.fromIterable(data).groupBy((item) -> {
             try {
                 int a = Integer.parseInt(item);
+                System.out.println(a);
                 return 1000;
             } catch (NumberFormatException e) {
                 return 2000;
@@ -760,6 +766,7 @@ public class MyObservables {
         Observable.fromIterable(data).groupBy((item) -> {
             try {
                 int a = Integer.parseInt(item);
+                System.out.println(a);
                 return 1000;
             } catch (NumberFormatException e) {
                 return 2000;
@@ -804,10 +811,144 @@ public class MyObservables {
     }
 
 
+    public static void scan() {
+        /*
+            Same as map but scan function receives most recently emitted value as an argument also.
+         */
+        Observable.range(1, 10)
+                .scan((previous, current) -> {
+                    System.out.println("previous = " + previous);
+                    System.out.println("current = " + current);
+                    return previous + current;
+                }).subscribe(new MyObserver<>());
+    }
 
+    public static void scanWithInitialValue() {
+        /*
+            Same as scan but it emits initial value to observers first and pass it to function as
+            a previous value.
+         */
+        Observable.range(1, 10)
+                .scan(100, (previous, current) -> {
+                    System.out.println("previous = " + previous);
+                    System.out.println("current = " + current);
+                    return previous + current;
+                }).subscribe(new MyObserver<>());
 
+        System.out.println("# 2");
 
+        /*
+            Same as above but initial value is returned via callable.
+         */
 
+        Observable.range(1, 10)
+                .scanWith(() -> 1000, (previous, current) -> {
+                    System.out.println("previous = " + previous);
+                    System.out.println("current = " + current);
+                    return previous + current;
+                }).subscribe(new MyObserver<>());
+
+    }
+
+    public static void compose() {
+        /*
+            1. Transform the source observable to some other type
+            2. Works on the original source observable
+            3. Different from flatMap because flatMap receives individual items from source
+            and then return observable instances.
+         */
+        Observable.fromIterable(Utils.getData())
+                .compose((source) -> {
+                    source.subscribe(new MyObserver<>());
+                    return source;
+                });
+
+        System.out.println("# 2");
+
+        Observable.fromIterable(Utils.getData())
+                .compose((source) -> {
+                    Observable<String> observable = Observable.just("composed");
+                    observable.subscribe(new MyObserver<>());
+                    return observable;
+                });
+    }
+
+    public static void window() {
+        /*
+            Same as buffer but window creates inner observable per item and buffer collects items
+            from source observable in buffer.
+         */
+
+        System.out.println("# 1");
+
+        List<String> data = Utils.getData();
+        Observable.fromIterable(data)
+                .window(2)
+                .subscribe((windowStream) -> windowStream.subscribe(new MyObserver<>()));
+
+        System.out.println("# 2");
+
+        Observable.fromIterable(data)
+                .window(2, 3)
+                .subscribe((windowStream) -> windowStream.subscribe(new MyObserver<>()));
+
+        System.out.println("# 3");
+
+        Observable.fromIterable(data)
+                .window(2, 3, 1)
+                .subscribe((windowStream) -> windowStream.subscribe(new MyObserver<>()));
+
+        System.out.println("# 4");
+
+        Observable.fromIterable(data)
+                .window(100, 100, TimeUnit.MICROSECONDS)
+                .subscribe((windowStream) -> windowStream.subscribe(new MyObserver<>()));
+
+        System.out.println("# 5");
+
+        Observable.fromIterable(data)
+                .window((emitter) -> emitter.onNext(1))
+                .subscribe((windowStream) -> windowStream.subscribe(new MyObserver<>()));
+
+        /*
+            Mose of the window operators are similar to buffer.
+         */
+    }
+
+    /*
+         ##########################
+         # # # OBSERVABLES : FILTER
+         ##########################
+    */
+
+    public static void debounce() {
+        List<String> data = Utils.getData();
+
+        System.out.println("# 1");
+
+        /*
+            An item needs to be most recent for at least 1 microseconds to be considered for
+            transmission.
+         */
+        Observable.fromIterable(data)
+                .debounce(1, TimeUnit.MICROSECONDS)
+                .subscribe(new MyObserver<>());
+
+        System.out.println("# 2");
+
+        /*
+            Item "def" is being intentionally delayed, so it will not most recent and "ghi" will
+            emitted before it, Hence "def" will not be emitted.
+         */
+        Observable.fromIterable(data)
+                .debounce((item) -> {
+                    if (item.equalsIgnoreCase("def")) {
+                        return Observable.just(item).delay(1000L, TimeUnit.MICROSECONDS);
+                    } else {
+                        return Observable.just(item);
+                    }
+                }).subscribe(new MyObserver<>());
+    }
 
 
 
