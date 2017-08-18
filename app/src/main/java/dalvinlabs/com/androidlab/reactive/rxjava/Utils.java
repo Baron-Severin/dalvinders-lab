@@ -12,12 +12,17 @@ public class Utils {
         return Arrays.asList(data);
     }
 
-    public static List<String> getAlphaNumericData() {
+    static List<String> getAlphaNumericData() {
         String[] data = {"ABC", "123", "DEF", "456", "GHI", "789", "JKL", "MNO", "PQR"};
         return Arrays.asList(data);
     }
 
-    public static List<String> transform(List<String> data) {
+    static List<String> getDuplicateData() {
+        String[] data = {"ABC", "123", "ABC", "123", "456", "456"};
+        return Arrays.asList(data);
+    }
+
+    static List<String> transform(List<String> data) {
         System.out.println("transform()");
         data.forEach((each) -> {
             // All this is required because String i.e. each returned here is immutable.

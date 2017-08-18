@@ -2,8 +2,11 @@ package dalvinlabs.com.androidlab.reactive.rxjava;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,6 +20,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.internal.Util;
 
 public class MyObservables {
 
@@ -948,6 +952,70 @@ public class MyObservables {
                         return Observable.just(item);
                     }
                 }).subscribe(new MyObserver<>());
+    }
+
+    public static void distinct() {
+
+        List<String> data = Utils.getDuplicateData();
+
+        /*
+            Won't emit duplicate items
+         */
+        System.out.println("# 1");
+        Observable.fromIterable(data)
+                .distinct()
+                .subscribe(new MyObserver<>());
+
+        System.out.println("# 2");
+        /*
+            Distinct are decided based upon function provided.
+         */
+        Observable.fromIterable(data)
+                .distinct((item) -> item)
+                .subscribe(new MyObserver<>());
+
+        System.out.println("# 3");
+
+        Integer[] counts = {1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        /*
+            Same as above but takes collection supplier, not sure about the purpose of
+            collection supplier.
+         */
+        Observable.fromIterable(Arrays.asList(counts))
+                .distinct((item) -> item % 5, HashSet::new)
+                .subscribe(new MyObserver<>());
+
+        System.out.println("# 4");
+        /*
+            Compare distinctiveness with 1 most recently value only
+         */
+        Observable.fromIterable(Utils.getDuplicateData())
+                .distinctUntilChanged()
+                .subscribe(new MyObserver<>());
+
+        /*
+            Same as above but key selector is provided
+         */
+        System.out.println("# 5");
+        counts = new Integer[]{1, 2, 3, 4, 5, 5, 5, 5, 5 };
+        Observable.fromIterable(Arrays.asList(counts))
+                .distinctUntilChanged((item) -> item % 5)
+                .subscribe(new MyObserver<>());
+
+        /*
+            Same as above but comparator is provider here.
+            NOTE : method reference is being user in comparator
+            prev.equals(curr) can be written as Integer::equals
+         */
+        System.out.println("# 6");
+        counts = new Integer[]{1, 2, 2, 4, 4, 4, 4};
+        Observable.fromIterable(Arrays.asList(counts))
+                .distinctUntilChanged(Integer::equals)
+                .subscribe(new MyObserver<>());
+
+
+
+
     }
 
 

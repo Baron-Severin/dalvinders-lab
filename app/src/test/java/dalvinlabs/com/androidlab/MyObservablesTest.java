@@ -223,6 +223,11 @@ public class MyObservablesTest {
     }
 
     @Test
+    public void testDistinct() throws Exception {
+        MyObservables.distinct();
+    }
+
+    @Test
     public void test() throws Exception {
 
     }
