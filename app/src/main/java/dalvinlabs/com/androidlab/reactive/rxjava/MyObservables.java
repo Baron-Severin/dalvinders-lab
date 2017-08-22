@@ -3,24 +3,25 @@ package dalvinlabs.com.androidlab.reactive.rxjava;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.CompletableObserver;
+import io.reactivex.MaybeObserver;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.Single;
+import io.reactivex.SingleObserver;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.internal.Util;
 
 public class MyObservables {
 
@@ -53,6 +54,7 @@ public class MyObservables {
                 System.out.println("MyObserver :: name = " + mName);
             }
             System.out.println("MyObserver :: onSubscribe");
+            System.out.println("-----");
         }
 
         @Override
@@ -87,6 +89,85 @@ public class MyObservables {
             if (mLatch != null) {
                 mLatch.countDown();
             }
+        }
+    }
+
+    public static class MyMaybeObserver<T> implements MaybeObserver<T> {
+
+        long startTime = 0L;
+
+        @Override
+        public void onSubscribe(Disposable d) {
+            startTime = System.currentTimeMillis();
+            System.out.println("MyMaybeObserver :: onSubscribe");
+            System.out.println("-----");
+        }
+
+        @Override
+        public void onSuccess(T value) {
+            System.out.println("MyMaybeObserver :: onSuccess");
+            System.out.println("T = " + value.getClass());
+            System.out.println("thread = " + Thread.currentThread().getName());
+            System.out.println("output = " + value);
+            System.out.println("-----");
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            System.out.println("MyMaybeObserver :: onError = " + e);
+            System.out.println("-----");
+        }
+
+        @Override
+        public void onComplete() {
+            System.out.println("MyMaybeObserver :: onComplete");
+            System.out.println("Time taken milliseconds = " + (System.currentTimeMillis() - startTime));
+            System.out.println("-----");
+        }
+    }
+
+    public static class MySingleObserver<T> implements SingleObserver<T> {
+
+        @Override
+        public void onSubscribe(Disposable d) {
+            System.out.println("MySingleObserver :: onSubscribe");
+            System.out.println("-----");
+        }
+
+        @Override
+        public void onSuccess(T value) {
+            System.out.println("MySingleObserver :: onSuccess");
+            System.out.println("T = " + value.getClass());
+            System.out.println("thread = " + Thread.currentThread().getName());
+            System.out.println("output = " + value);
+            System.out.println("-----");
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            System.out.println("MySingleObserver :: onError = " + e);
+            System.out.println("-----");
+        }
+    }
+
+    public static class MyCompletableObserver implements CompletableObserver {
+        @Override
+        public void onSubscribe(Disposable d) {
+            System.out.println("MyCompletableObserver :: onSubscribe");
+            System.out.println("-----");
+        }
+
+        @Override
+        public void onComplete() {
+            System.out.println("MyCompletableObserver :: onComplete");
+            System.out.println("thread = " + Thread.currentThread().getName());
+            System.out.println("-----");
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            System.out.println("MyCompletableObserver :: onError = " + e);
+            System.out.println("-----");
         }
     }
 
@@ -1012,13 +1093,202 @@ public class MyObservables {
         Observable.fromIterable(Arrays.asList(counts))
                 .distinctUntilChanged(Integer::equals)
                 .subscribe(new MyObserver<>());
+    }
 
+    public static void elementAt() {
+        List<String> data = Utils.getData();
 
+        /*
+            Receives item at a particular index only
+         */
+        Observable.fromIterable(data)
+                .elementAt(1)
+                .subscribe(new MyMaybeObserver<>());
 
+        Observable.fromIterable(data)
+                .elementAt(10)
+                .subscribe(new MyMaybeObserver<>());
+
+        Observable.fromIterable(data)
+                .elementAt(10, "Default Item")
+                .subscribe(new MySingleObserver<>());
+
+        /*
+            Throws exception if index < 0
+         */
+        Observable.fromIterable(data)
+                .elementAtOrError(-1)
+                .subscribe(new MySingleObserver<>());
 
     }
 
+    public static void filter() {
+        List<String> data = Utils.getData();
+        Observable.fromIterable(data)
+                .filter((item) -> item.equalsIgnoreCase("def"))
+                .subscribe(new MyObserver<>());
+    }
 
+    public static void ofType() {
+        List<Number> numbers = new ArrayList<>();
+        numbers.add(123);
+        numbers.add(456L);
+        numbers.add(7.89F);
+
+        Observable.fromIterable(numbers)
+                .ofType(Integer.class)
+                .subscribe(new MyObserver<>());
+    }
+
+    public static void first() {
+        System.out.println("# 1");
+        Observable.fromIterable(Utils.getData())
+                .firstElement()
+                .subscribe(new MyMaybeObserver<>());
+
+        System.out.println("# 2");
+        Observable.fromIterable(new ArrayList<>())
+                .firstElement()
+                .subscribe(new MyMaybeObserver<>());
+
+        /*
+            First element or default element
+         */
+        System.out.println("# 3");
+        Observable.fromIterable(new ArrayList<>())
+                .first("Default")
+                .subscribe(new MySingleObserver<>());
+
+        /*
+            First element or error
+         */
+        System.out.println("# 4");
+        Observable.fromIterable(new ArrayList<>())
+                .firstOrError()
+                .subscribe(new MySingleObserver<>());
+
+        /*
+            Blocking first, not recommended, can be used for testing purpose.
+         */
+        System.out.println("# 5");
+        String output = Observable.fromIterable(Utils.getData())
+                .blockingFirst();
+        System.out.println(output);
+
+        /*
+            Blocking first or default, not recommended, can be used for testing purpose.
+         */
+        System.out.println("# 6");
+        output = Observable.fromIterable(new ArrayList<String>())
+                .blockingFirst("Default");
+        System.out.println(output);
+
+        /*
+            Blocking each item
+         */
+        System.out.println("# 7");
+        Observable.fromIterable(Utils.getData())
+                .blockingForEach((item) -> System.out.println("output = " + item));
+
+        /*
+            Returns iterable
+         */
+        System.out.println("# 8");
+        Iterable<String> iterable = Observable.fromIterable(Utils.getData())
+                .blockingIterable();
+        Iterator<String> iterator = iterable.iterator();
+        iterator.forEachRemaining((item) -> System.out.println("output = " + item));
+
+        /*
+            Returns item if observable emits only 1 item else error
+         */
+        System.out.println("# 9");
+        Observable.just("123")
+                .singleElement()
+                .subscribe(new MyMaybeObserver<>());
+
+        System.out.println("# 10");
+        Observable.fromIterable(Utils.getData())
+                .singleElement()
+                .subscribe(new MyMaybeObserver<>());
+
+        /*
+            Returns Single observer
+         */
+        System.out.println("# 11");
+        Observable.just("123")
+                .single("Default")
+                .subscribe(new MySingleObserver<>());
+
+        /*
+            Same as above with default value
+         */
+        System.out.println("# 12");
+        Observable.empty()
+                .single("Default")
+                .subscribe(new MySingleObserver<>());
+
+        /*
+            Exception if observable emits more than 1 item
+         */
+        System.out.println("# 13");
+        Observable.fromIterable(Utils.getData())
+                .singleOrError()
+                .subscribe(new MySingleObserver<>());
+
+        System.out.println("# 14");
+        Observable.fromIterable(Utils.getData())
+                .take(2)
+                .subscribe(new MyObserver<>());
+
+        System.out.println("# 15");
+        Observable.fromIterable(Utils.getData())
+                .take(10)
+                .subscribe(new MyObserver<>());
+
+    }
+
+    public static void ignoreElements() {
+        /*
+            Ignore all emission and complets
+         */
+        Observable.fromIterable(Utils.getData())
+                .ignoreElements()
+                .subscribe(new MyCompletableObserver());
+    }
+
+    public static void last() {
+        List<String> data = Utils.getData();
+
+        System.out.println("# 1");
+        Observable.fromIterable(data)
+                .last("Default")
+                .subscribe(new MySingleObserver<>());
+
+        System.out.println("# 2");
+        Observable.empty()
+                .last("Default")
+                .subscribe(new MySingleObserver<>());
+
+        System.out.println("# 3");
+        Observable.fromIterable(data)
+                .lastElement()
+                .subscribe(new MyMaybeObserver<>());
+
+        System.out.println("# 4");
+        Observable.fromIterable(data)
+                .lastOrError()
+                .subscribe(new MySingleObserver<>());
+
+        System.out.println("# 5");
+        Observable.empty()
+                .lastOrError()
+                .subscribe(new MySingleObserver<>());
+    }
+
+    public static void sample() {
+
+    }
 
 
 

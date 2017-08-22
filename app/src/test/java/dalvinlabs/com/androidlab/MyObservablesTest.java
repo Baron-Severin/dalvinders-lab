@@ -228,6 +228,36 @@ public class MyObservablesTest {
     }
 
     @Test
+    public void testElementAt() throws Exception {
+        MyObservables.elementAt();
+    }
+
+    @Test
+    public void testFilter() throws Exception {
+        MyObservables.filter();
+    }
+
+    @Test
+    public void testOfType() throws Exception {
+        MyObservables.ofType();
+    }
+
+    @Test
+    public void testFirst() throws Exception {
+        MyObservables.first();
+    }
+
+    @Test
+    public void testIgnoreElements() throws Exception {
+        MyObservables.ignoreElements();
+    }
+
+    @Test
+    public void testLast() throws Exception {
+        MyObservables.last();
+    }
+
+    @Test
     public void test() throws Exception {
 
     }
