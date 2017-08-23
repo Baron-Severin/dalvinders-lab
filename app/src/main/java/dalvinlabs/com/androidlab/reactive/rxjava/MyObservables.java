@@ -25,6 +25,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MyObservables {
 
+    private static List<String> sData = Utils.getData();
+
     // # # # OBSERVERS
 
     private static CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -1287,9 +1289,75 @@ public class MyObservables {
     }
 
     public static void sample() {
+        /*
+            Most recent item in last 1000 microseconds window
+         */
+        System.out.println("# 1");
+        Observable.fromIterable(sData)
+                .timestamp()
+                .sample(1000, TimeUnit.MICROSECONDS)
+                .subscribe(new MyObserver<>());
 
+        /*
+            Emission controlled by sampler inner observable
+         */
+        System.out.println("# 2");
+        Observable.fromIterable(sData)
+                .sample((observer) -> {
+                    System.out.println("emitter");
+                    Observable.just("123").subscribe(observer);
+                }, true).subscribe(new MyObserver<>());
     }
 
+    public static void skip(CountDownLatch latch) {
+        System.out.println("# 1");
+        Observable.fromIterable(sData)
+                .skip(2)
+                .subscribe(new MyObserver<>());
 
+        System.out.println("# 2");
+        Observable.fromIterable(sData)
+                .skipLast(4)
+                .subscribe(new MyObserver<>());
+
+        System.out.println("# 3");
+        /*
+            1. Source emits 10 items, each every second.
+            2. Skip observable will delay it's broadcast by 5 seconds.
+            3. Hence items emitted by source in initial 5 seconds will be ignored and not received
+            by observer.
+         */
+        Observable.interval(1L, TimeUnit.SECONDS)
+                .take(10)
+                .skipUntil((observer) -> {
+                    System.out.println("Skip observable");
+                    Observable.just("123")
+                            .delay(5L, TimeUnit.SECONDS).subscribe(observer);
+                }).subscribeOn(Schedulers.computation()).subscribe(new MyObserver<>(latch));
+    }
+
+    public static void skipWhile() {
+        /*
+            Skips until predicate returns true, once it returns false, it's not checked again,
+            all subsequent emissions are made.
+         */
+        Observable.fromIterable(sData)
+                .skipWhile((item) -> {
+                    System.out.println("item = " + item);
+                    return item.equalsIgnoreCase("abc");
+                }).subscribe(new MyObserver<>());
+    }
+
+    public static void takeLast() {
+        Observable.fromIterable(sData)
+                .takeLast(3)
+                .subscribe(new MyObserver<>());
+    }
+
+    /*
+         ##########################
+         # # # OBSERVABLES : COMBINE
+         ##########################
+    */
 
 }

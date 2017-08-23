@@ -2,16 +2,11 @@ package dalvinlabs.com.androidlab;
 
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import dalvinlabs.com.androidlab.reactive.rxjava.Hybrids;
 import dalvinlabs.com.androidlab.reactive.rxjava.MyObservables;
-import dalvinlabs.com.androidlab.reactive.rxjava.MySingle;
 
 //@RunWith(MockitoJUnitRunner.class)
 public class MyObservablesTest {
@@ -255,6 +250,30 @@ public class MyObservablesTest {
     @Test
     public void testLast() throws Exception {
         MyObservables.last();
+    }
+
+    @Test
+    public void testSample() throws Exception {
+        CountDownLatch latch = new CountDownLatch(1);
+        MyObservables.sample();
+        latch.await(10L, TimeUnit.SECONDS);
+    }
+
+    @Test
+    public void testSkip() throws Exception {
+        CountDownLatch latch = new CountDownLatch(1);
+        MyObservables.skip(latch);
+        latch.await();
+    }
+
+    @Test
+    public void testSkipWhile() throws Exception {
+        MyObservables.skipWhile();
+    }
+
+    @Test
+    public void testTakeLast() throws Exception {
+        MyObservables.takeLast();
     }
 
     @Test
