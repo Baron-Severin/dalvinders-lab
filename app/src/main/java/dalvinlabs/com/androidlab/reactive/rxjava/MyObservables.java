@@ -11,11 +11,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import io.reactivex.CompletableObserver;
 import io.reactivex.MaybeObserver;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.Scheduler;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.CompositeDisposable;
@@ -1359,5 +1361,96 @@ public class MyObservables {
          # # # OBSERVABLES : COMBINE
          ##########################
     */
+
+    public static void combineLatest() {
+
+        System.out.println("# 1");
+
+        /*
+            Emits item every second
+         */
+        Observable sourceInterval = Observable.interval(1L, TimeUnit.MILLISECONDS).take(10);
+
+        /*
+            Emits string items
+         */
+        Observable sourceString = Observable.fromIterable(sData);
+
+        Observable<?> combined = Observable.combineLatest((objects) -> {
+            StringBuilder stringBuilder = new StringBuilder();
+            Stream.of(objects).forEach(stringBuilder::append);
+            return stringBuilder.toString();
+        }, 1, sourceInterval, sourceString);
+
+        combined.subscribe(new MyObserver<>());
+
+        System.out.println("# 2");
+
+        /*
+            Because empty observable immediately terminates hence whole sequence terminates.
+         */
+        combined = Observable.combineLatest((objects) -> {
+            StringBuilder stringBuilder = new StringBuilder();
+            Stream.of(objects).forEach(stringBuilder::append);
+            return stringBuilder.toString();
+        }, 1, sourceInterval, sourceString, Observable.empty());
+        combined.subscribe(new MyObserver<>());
+
+        System.out.println("# 3");
+        /*
+            Same as above but instead collection of sources are used.
+         */
+        List<Observable<?>> collection = new ArrayList<>();
+        collection.add(sourceInterval);
+        collection.add(sourceString.repeat(1));
+        combined = Observable.combineLatest(collection, (objects) -> {
+            StringBuilder stringBuilder = new StringBuilder();
+            Stream.of(objects).forEach(stringBuilder::append);
+            return stringBuilder.toString();
+        });
+        combined.subscribe(new MyObserver<>());
+
+        System.out.println("# 4");
+        /*
+            Explicitly combine 2 sources, similarly it can be done up to 10 sources
+         */
+        combined = Observable.combineLatest(sourceInterval, sourceString.repeat(1),
+                (first, second) -> first + "-" + second);
+        combined.subscribe(new MyObserver<>());
+    }
+
+    public static void combineLatestDelayError() {
+        Observable sourceInterval = Observable.interval(1L, TimeUnit.MILLISECONDS).take(10);
+        Observable sourceString = Observable.fromIterable(sData);
+        String[] array = {"foo", "bar"};
+        Observable sourceError = Observable.fromArray(array).map((item) -> {
+           if (item.equalsIgnoreCase("bar")) {
+               throw new Exception("Just for test");
+           } else return item;
+        });
+
+        /*
+            Throws the error at the end.
+         */
+        Observable<?> combined = Observable.combineLatestDelayError((objects) -> {
+            StringBuilder stringBuilder = new StringBuilder();
+            Stream.of(objects).forEach(stringBuilder::append);
+            return stringBuilder.toString();
+        }, 1, sourceInterval, sourceString, sourceError);
+        combined.subscribe(new MyObserver<>());
+    }
+
+    //FIXME
+    public static void join(){};
+
+    public static void merge(CountDownLatch latch) {
+        System.out.println("# 1");
+        Integer[] array = {1, 2, 3, 4, 5};
+        Observable.
+                merge(Observable.fromArray(array), Observable.fromIterable(sData))
+                .subscribe(new MyObserver<>(latch));
+
+        System.out.println("# 2");
+    }
 
 }

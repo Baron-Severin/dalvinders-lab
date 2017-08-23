@@ -277,6 +277,23 @@ public class MyObservablesTest {
     }
 
     @Test
+    public void testCombineLatest() throws Exception {
+        MyObservables.combineLatest();
+    }
+
+    @Test
+    public void testCombineLatestDelayError() throws Exception {
+        MyObservables.combineLatestDelayError();
+    }
+
+    @Test
+    public void testMerge() throws Exception {
+        CountDownLatch latch = new CountDownLatch(1);
+        MyObservables.merge(latch);
+        latch.await();
+    }
+
+    @Test
     public void test() throws Exception {
 
     }
