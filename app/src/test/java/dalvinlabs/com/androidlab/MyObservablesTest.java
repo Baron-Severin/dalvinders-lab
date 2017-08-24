@@ -294,6 +294,11 @@ public class MyObservablesTest {
     }
 
     @Test
+    public void testStartWith() throws Exception {
+        MyObservables.startWith();
+    }
+
+    @Test
     public void test() throws Exception {
 
     }

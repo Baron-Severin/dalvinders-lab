@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 import io.reactivex.CompletableObserver;
 import io.reactivex.MaybeObserver;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.Scheduler;
 import io.reactivex.Single;
@@ -1440,17 +1441,84 @@ public class MyObservables {
         combined.subscribe(new MyObserver<>());
     }
 
-    //FIXME
-    public static void join(){};
-
     public static void merge(CountDownLatch latch) {
         System.out.println("# 1");
+
         Integer[] array = {1, 2, 3, 4, 5};
-        Observable.
-                merge(Observable.fromArray(array), Observable.fromIterable(sData))
-                .subscribe(new MyObserver<>(latch));
+        /*
+            Merge 2 observables
+         */
+        Observable.merge(Observable.fromArray(array), Observable.fromIterable(sData))
+                .subscribe(new MyObserver<>());
 
         System.out.println("# 2");
+
+        /*
+            Merge list of observables
+         */
+        Observable<String> stringStream = Observable.fromIterable(sData);
+        Observable<String> alphaNumericStream = Observable.fromIterable(Utils.getAlphaNumericData());
+        List<Observable<String>> collection = new ArrayList<>();
+        collection.add(stringStream);
+        collection.add(alphaNumericStream);
+        Observable.merge(collection).subscribe(new MyObserver<>());
+        /*
+            Merge observable sources emitted by an observable
+         */
+        System.out.println("# 3");
+
+        class Data {
+            private int value = 1;
+        }
+        Data data = new Data();
+
+        /*
+            1. Observable.fromCallable gets called 5 times
+            2. This invokes callable 5 times
+            3. Make it emit 5 observables
+            4. Hence we receive an observable that emits 5 observables.
+         */
+        Observable<Observable<Integer>> source = Observable
+                .fromCallable(() -> Observable.just(data.value ++)).repeat(5);
+
+        /*
+            Merge the items of all the observables emitted by a single observable
+         */
+        Observable.merge(source).subscribe(new MyObserver<>());
+
+        /*
+            Merge an array of observables
+         */
+        System.out.println("# 4");
+        String[] temp = {"123", "456"};
+        Observable<?>[] sourcesArray = new Observable[2];
+        sourcesArray[0] = Observable.fromIterable(sData);
+        sourcesArray[1] = Observable.fromArray(temp);
+        Observable.mergeArray(sourcesArray).subscribe(new MyObserver<>(latch));
     }
+
+    public static void startWith() {
+        System.out.println("# 1");
+        List<String> collection = new ArrayList<>();
+        collection.add("123");
+        collection.add("456");
+        Observable.fromIterable(sData).startWith(collection).subscribe(new MyObserver<>());
+
+        System.out.println("# 2");
+        Observable.fromIterable(sData).startWith(Observable.just("START WITH"))
+                .subscribe(new MyObserver<>());
+
+        System.out.println("# 3");
+        String[] array = {"111", "222"};
+        Observable.fromIterable(sData).startWithArray(array)
+                .subscribe(new MyObserver<>());
+    }
+
+    //FIXME
+    public static void join(){};
+    //FIXME
+    public static void switchOperator(){};
+    //FIXME
+    public static void zip(){};
 
 }
