@@ -16,9 +16,7 @@ import java.util.stream.Stream;
 import io.reactivex.CompletableObserver;
 import io.reactivex.MaybeObserver;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.CompositeDisposable;
@@ -59,6 +57,7 @@ public class MyObservables {
                 System.out.println("MyObserver :: name = " + mName);
             }
             System.out.println("MyObserver :: onSubscribe");
+            System.out.println("MyObserver :: disposable = " + d.toString());
             System.out.println("-----");
         }
 
@@ -1514,10 +1513,30 @@ public class MyObservables {
                 .subscribe(new MyObserver<>());
     }
 
+    public static void switchOnNext(CountDownLatch latch) {
+
+        List<Observable<Long>> collectionOfObservable = new ArrayList<>();
+
+        Observable<Long> first = Observable.interval(1L, TimeUnit.SECONDS).take(5);
+        first.doOnNext(item -> System.out.println("first doOnSubscribe, item = " + item));
+
+        Observable<Long> second = Observable.timer(3L, TimeUnit.SECONDS).map(item -> item + 100);
+        second.doOnSubscribe(item -> System.out.println("second doOnSubscribe, item = " + item));
+
+        collectionOfObservable.add(second);
+        collectionOfObservable.add(first);
+
+        Observable<Observable<Long>> source = Observable.fromIterable(collectionOfObservable);
+        source.doOnNext(item -> System.out.println(item.toString()));
+
+        Observable.switchOnNext(source).subscribe(new MyObserver<>(latch));
+
+
+    }
+
     //FIXME
     public static void join(){};
-    //FIXME
-    public static void switchOperator(){};
+
     //FIXME
     public static void zip(){};
 

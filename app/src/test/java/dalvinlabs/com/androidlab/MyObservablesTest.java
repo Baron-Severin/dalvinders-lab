@@ -299,6 +299,13 @@ public class MyObservablesTest {
     }
 
     @Test
+    public void testSwitchOnNext() throws Exception {
+        CountDownLatch latch = new CountDownLatch(1);
+        MyObservables.switchOnNext(latch);
+        latch.await();
+    }
+
+    @Test
     public void test() throws Exception {
 
     }

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import dalvinlabs.com.androidlab.architecture.mvc.controller.ActivityController;
+import dalvinlabs.com.androidlab.architecture.mvp.view.ActivityView;
 import dalvinlabs.com.androidlab.deeplink.DeepLinkOptionsActivity;
 import dalvinlabs.com.androidlab.design.patterns.abstractfactory.AbstractFactory;
 import dalvinlabs.com.androidlab.network.okhttp.OkHttp;
@@ -153,6 +154,16 @@ public class ScrollingActivity extends AppCompatActivity {
     public void onClickMvc(View view) {
         Log.d(LOG_TAG, "onClickMvc");
         startActivity(new Intent(this, ActivityController.class));
+    }
+
+    public void onClickMvp(View view) {
+        Log.d(LOG_TAG, "onClickMvp");
+        startActivity(new Intent(this, ActivityView.class));
+    }
+
+    public void onClickMvvm(View view) {
+        Log.d(LOG_TAG, "onClickMvp");
+        startActivity(new Intent(this, dalvinlabs.com.androidlab.architecture.mvvm.view.ActivityView.class));
     }
 
 }
