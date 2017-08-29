@@ -1,6 +1,8 @@
 package dalvinlabs.com.androidlab.reactive.rxjava;
 
 
+import android.databinding.ObservableField;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -1513,25 +1515,24 @@ public class MyObservables {
                 .subscribe(new MyObserver<>());
     }
 
+    /*
+        FIXME : Not working as expected, revisit later on.
+     */
     public static void switchOnNext(CountDownLatch latch) {
 
         List<Observable<Long>> collectionOfObservable = new ArrayList<>();
 
-        Observable<Long> first = Observable.interval(1L, TimeUnit.SECONDS).take(5);
-        first.doOnNext(item -> System.out.println("first doOnSubscribe, item = " + item));
+        Observable<Long> first = Observable.interval(1L, TimeUnit.SECONDS).take(5)
+                .doOnNext((item) -> System.out.println("first doOnNext item = " + item));
 
-        Observable<Long> second = Observable.timer(3L, TimeUnit.SECONDS).map(item -> item + 100);
-        second.doOnSubscribe(item -> System.out.println("second doOnSubscribe, item = " + item));
+        Observable<Long> second = Observable.interval(1L, TimeUnit.SECONDS)
+                .map(item -> item + 100).take(10);
 
-        collectionOfObservable.add(second);
         collectionOfObservable.add(first);
+        collectionOfObservable.add(second);
 
-        Observable<Observable<Long>> source = Observable.fromIterable(collectionOfObservable);
-        source.doOnNext(item -> System.out.println(item.toString()));
-
-        Observable.switchOnNext(source).subscribe(new MyObserver<>(latch));
-
-
+        Observable.switchOnNext(Observable.fromIterable(collectionOfObservable))
+                .subscribeOn(Schedulers.io()).subscribe(new MyObserver<>(latch));
     }
 
     //FIXME
