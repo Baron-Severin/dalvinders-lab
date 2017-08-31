@@ -12,8 +12,8 @@ import dagger.Component;
     5. We can enable modules via @Component annotation
 */
 @Singleton
-@Component(modules = {NetworkApiModule.class})
+@Component(modules = {NetworkApiModule.class, NetworkApiModuleWithContext.class})
 public interface NetworkApiComponent {
+    // It essentially means inject dependencies into DaggerConsumer class if this method is invoked.
     void inject(DaggerConsumer consumer);
-    void inject(DaggerConsumer2 consumer);
 }

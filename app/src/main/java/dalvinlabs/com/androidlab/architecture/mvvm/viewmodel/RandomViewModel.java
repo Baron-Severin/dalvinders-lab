@@ -19,7 +19,6 @@ public class RandomViewModel implements ViewModel {
 
     public final ObservableField<String> random = new ObservableField<>("Default 123");
 
-    //TODO: can model be injected through dagger
     private MvvmModel model;
 
     public RandomViewModel() {

@@ -22,6 +22,9 @@ public class DaggerConsumer {
     @Inject
     NetworkApiInjectionByConstructor networkApiInjectionByConstructor;
 
+    @Inject
+    DaggerConsumer2 daggerConsumer2;
+
     DaggerConsumer(Context context) {
         AndroidLabApplication androidLabApplication = (AndroidLabApplication) context.getApplicationContext();
         androidLabApplication.getNetworkApiComponent().inject(this);
@@ -40,6 +43,10 @@ public class DaggerConsumer {
         } else {
             Log.d(LOG_TAG, "Injection through annotation @Provides passed");
             System.out.println("Validate user = " + networkApiInjectionByProvides.validateUser("abc", "123"));
+        }
+
+        if (daggerConsumer2 != null) {
+            daggerConsumer2.testDagger();
         }
     }
 }

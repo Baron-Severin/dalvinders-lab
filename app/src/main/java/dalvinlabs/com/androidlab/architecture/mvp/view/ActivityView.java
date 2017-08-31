@@ -14,8 +14,6 @@ import dalvinlabs.com.androidlab.architecture.mvp.presenter.ConcretePresenter;
     1. In MVP activity is considered as view.
     2. Implements view interface so presenter receives non-android specific view.
     3. It creates instance of presenter and give it a view.
-
-    TODO: Can presenter be injected through dagger.
  */
 
 public class ActivityView extends AppCompatActivity implements LabView {

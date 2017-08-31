@@ -15,7 +15,6 @@ import dalvinlabs.com.androidlab.architecture.components.model.RandomModel;
 public class MyViewModel extends ViewModel {
 
     private static final String LOG_TAG = MyViewModel.class.getSimpleName();
-    // TODO: check if model can be injected through dagger.
     private RandomModel model = null;
 
     public final ObservableField<String> random = new ObservableField<>("Default 123");
