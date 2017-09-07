@@ -3,13 +3,13 @@ package dalvinlabs.com.androidlab;
 
 import android.app.Application;
 
-import dalvinlabs.com.androidlab.dagger.DaggerNetworkApiComponent;
-import dalvinlabs.com.androidlab.dagger.NetworkApiComponent;
-import dalvinlabs.com.androidlab.dagger.NetworkApiModuleWithContext;
+//import dalvinlabs.com.androidlab.dagger.DaggerNetworkApiComponent;
+//import dalvinlabs.com.androidlab.dagger.NetworkApiComponent;
+//import dalvinlabs.com.androidlab.dagger.NetworkApiModuleWithContext;
 
 public class AndroidLabApplication extends Application {
 
-    private NetworkApiComponent networkApiComponent;
+    //private NetworkApiComponent networkApiComponent;
 
     @Override
     public void onCreate() {
@@ -20,11 +20,11 @@ public class AndroidLabApplication extends Application {
             There onwards that module can pass that context further while satisfying dependencies of
             other classes.
          */
-        networkApiComponent = DaggerNetworkApiComponent.builder().
-                networkApiModuleWithContext(new NetworkApiModuleWithContext(this)).build();
+        //networkApiComponent = DaggerNetworkApiComponent.builder().
+        //        networkApiModuleWithContext(new NetworkApiModuleWithContext(this)).build();
     }
 
-    public NetworkApiComponent getNetworkApiComponent() {
-        return networkApiComponent;
-    }
+    //public NetworkApiComponent getNetworkApiComponent() {
+    //    return networkApiComponent;
+    //}
 }

@@ -3,10 +3,15 @@ package dalvinlabs.com.androidlab;
 
 import org.junit.Test;
 
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import dalvinlabs.com.androidlab.reactive.rxjava.MyObservables;
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.observers.TestObserver;
+import io.reactivex.subscribers.TestSubscriber;
 
 //@RunWith(MockitoJUnitRunner.class)
 public class MyObservablesTest {
@@ -303,6 +308,44 @@ public class MyObservablesTest {
         CountDownLatch latch = new CountDownLatch(1);
         MyObservables.switchOnNext(latch);
         latch.await();
+    }
+
+    @Test
+    public void testZipIterable() throws Exception {
+        CountDownLatch latch = new CountDownLatch(1);
+        MyObservables.zipIterable(latch);
+        latch.await();
+    }
+
+    @Test
+    public void testZipObservables() throws Exception {
+        CountDownLatch latch = new CountDownLatch(1);
+        MyObservables.zipObservables(latch);
+        latch.await();
+    }
+
+    @Test
+    public void testZipIndividual() throws Exception {
+        MyObservables.zipIndividual();
+    }
+
+    @Test
+    public void testZipIndividualWithTestObserver() throws Exception {
+        Observable observable = MyObservables.zipIndividual();
+        TestObserver testObserver = observable.test();
+        testObserver.assertSubscribed();
+        testObserver.assertSubscribed();
+        testObserver.assertResult("abc-1", "def-2", "ghi-3");
+        List<List> events = testObserver.getEvents();
+        testObserver.assertValueCount(3);
+        testObserver.assertNoErrors();
+        testObserver.assertComplete();
+    }
+
+
+    @Test
+    public void testJoin() throws Exception {
+        MyObservables.join();
     }
 
     @Test

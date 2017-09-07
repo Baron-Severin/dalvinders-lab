@@ -59,7 +59,7 @@ dependencies {
     androidTestCompile 'org.mockito:mockito-android:+'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     //Dagger-2
-    compile 'com.google.dagger:dagger:2.9'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
+    //compile 'com.google.dagger:dagger:2.9'
+    //annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
 
 }

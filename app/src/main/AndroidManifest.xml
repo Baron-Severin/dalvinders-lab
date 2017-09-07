@@ -79,7 +79,6 @@
         <activity android:name=".architecture.components.ActivityArchitectureComponents"/>
         <activity android:name=".architecture.components.lifecycle.MyLifeCycleAwareActivity"/>
         <activity android:name=".architecture.components.viewmodel.ActivityForViewModelComponent"/>
-        <activity android:name=".dagger.DaggerActivity"/>
     </application>
 
 </manifest>
