@@ -1,6 +1,8 @@
 package dalvinlabs.com.androidlab.reactive.rxjava;
 
 
+import android.databinding.ObservableField;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -22,7 +24,6 @@ import io.reactivex.SingleObserver;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class MyObservables {
@@ -1534,70 +1535,10 @@ public class MyObservables {
                 .subscribeOn(Schedulers.io()).subscribe(new MyObserver<>(latch));
     }
 
-    public static void zipIterable(CountDownLatch latch){
-        List<Observable<Long>> collectionOfObservables = new ArrayList<>();
-        Observable<Long> first = Observable.interval(1L, TimeUnit.SECONDS);
-        Long[] array = {100L, 200L, 300L};
-        Observable<Long> second = Observable.fromArray(array);
-        collectionOfObservables.add(first);
-        collectionOfObservables.add(second);
+    //FIXME
+    public static void join(){};
 
-        /*
-            1. Collect an emission from each observable in iterable
-            and provides to a function to apply zip logic
-         */
-        Observable.zip(collectionOfObservables, items -> (Long)items[0] + (Long)items[1])
-                .subscribe(new MyObserver<>(latch));
-    }
-
-    public static void zipObservables(CountDownLatch latch) {
-
-        /*
-            1. source observable is being created through create which emits 3 observables
-            2. 3rd observable emits 3 items but others emit 2 items.
-            3. Hence we got an observable i.e. source which is observable that further emits
-            observables.
-            4. Zip operator will combine each item out of these 3 observables via combiner function.
-         */
-
-        Observable<Observable<String>> source = Observable.create(observableEmitter -> {
-            System.out.println("create");
-            observableEmitter.onNext(Observable.just("abc", "def"));
-            observableEmitter.onNext(Observable.just("123", "456"));
-            observableEmitter.onNext(Observable.just("alpha", "beta", "gama"));
-            observableEmitter.onComplete();
-        });
-
-        source.doOnSubscribe(d -> System.out.println("source doOnSubscribe"));
-        source.doOnNext(i -> System.out.println("source doOnNext = " + i.toString()));
-        source.doOnComplete(() -> System.out.println("source doOnComplete"));
-
-
-        Observable.zip(source, items -> items[0] + "-" + items[1] + "-" + items[2])
-                .doOnSubscribe(d -> System.out.println("zip doOnSubscribe"))
-                .doOnNext(i -> System.out.println("zip doOnNext"))
-                .subscribe(new MyObserver<>(latch));
-    }
-
-    public static Observable<?> zipIndividual() {
-
-        Observable<String> first = Observable.just("abc", "def", "ghi");
-        Observable<Integer> second = Observable.just(1, 2, 3);
-
-        Observable<String> zip = Observable.zip(first, second, (a, b) -> a + "-" + b);
-        zip.subscribe(new MyObserver<>());
-        return zip;
-    }
-
-    public static void join() {
-        //TODO: More clarification required
-        Observable<Long> left = Observable.just(1L, 2L, 3L);
-        Observable<Long> right = Observable.just(100L, 200L, 300L);
-
-        left.join(right,
-                leftValue -> Observable.interval(1L, TimeUnit.MICROSECONDS),
-                rightValue -> Observable.interval(1L, TimeUnit.MICROSECONDS),
-                (a, b) -> a + b).subscribe(new MyObserver<>());
-    }
+    //FIXME
+    public static void zip(){};
 
 }

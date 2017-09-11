@@ -18,7 +18,7 @@ import java.util.Map;
 import dalvinlabs.com.androidlab.architecture.components.ActivityArchitectureComponents;
 import dalvinlabs.com.androidlab.architecture.mvc.controller.ActivityController;
 import dalvinlabs.com.androidlab.architecture.mvp.view.ActivityView;
-//import dalvinlabs.com.androidlab.dagger.DaggerActivity;
+import dalvinlabs.com.androidlab.dagger.DaggerActivity;
 import dalvinlabs.com.androidlab.deeplink.DeepLinkOptionsActivity;
 import dalvinlabs.com.androidlab.design.patterns.abstractfactory.AbstractFactory;
 import dalvinlabs.com.androidlab.network.okhttp.OkHttp;
@@ -175,7 +175,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
     public void onClickDagger(View view) {
         Log.d(LOG_TAG, "onClickAndroidArchitecture");
-        //startActivity(new Intent(this, DaggerActivity.class));
+        startActivity(new Intent(this, DaggerActivity.class));
     }
 
 }
