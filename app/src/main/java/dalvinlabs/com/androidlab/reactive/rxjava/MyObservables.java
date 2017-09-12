@@ -240,6 +240,10 @@ public class MyObservables {
             System.out.println("consumerList :: accept = " + data.toString());
 
 
+    private Object getNull() {
+        return null;
+    }
+
     /*
          ##########################
          # # # OBSERVABLES : CREATE
@@ -254,6 +258,8 @@ public class MyObservables {
         Observable<List<String>> myObservable = Observable.just(Utils.getData());
         myObservable.subscribe(consumerList);
     }
+
+
 
     /*
         Emits every item of an array
