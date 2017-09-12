@@ -55,8 +55,10 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0-alpha9"
     testCompile 'android.arch.persistence.room:testing:1.0.0-alpha9'
     compile 'android.arch.persistence.room:rxjava2:1.0.0-alpha9'
-    testCompile 'org.mockito:mockito-core:+'
-    androidTestCompile 'org.mockito:mockito-android:+'
+    // To use mockito with junit tests
+    testCompile 'org.mockito:mockito-core:2.10.0'
+    // To use mockito with android tests
+    androidTestCompile 'org.mockito:mockito-android:2.10.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     //Dagger-2
     compile 'com.google.dagger:dagger:2.9'
