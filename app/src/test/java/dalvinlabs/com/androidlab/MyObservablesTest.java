@@ -340,12 +340,15 @@ public class MyObservablesTest {
         testObserver.assertComplete();
     }
 
-
     @Test
     public void testJoin() throws Exception {
         MyObservables.join();
     }
 
+    @Test
+    public void testConcat() throws Exception {
+        MyObservables.concat();
+    }
 
     @Test
     public void test() throws Exception {

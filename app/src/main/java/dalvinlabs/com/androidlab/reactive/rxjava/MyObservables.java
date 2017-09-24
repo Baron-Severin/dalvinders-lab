@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 import io.reactivex.CompletableObserver;
 import io.reactivex.MaybeObserver;
 import io.reactivex.Observable;
+import io.reactivex.ObservableTransformer;
 import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
@@ -1137,7 +1138,8 @@ public class MyObservables {
     public static void filter() {
         List<String> data = Utils.getData();
         Observable.fromIterable(data)
-                .filter((item) -> item.equalsIgnoreCase("def"))
+                .filter(item -> item.equalsIgnoreCase("def"))
+                //.filter(item -> item.equalsIgnoreCase("abc"))
                 .subscribe(new MyObserver<>());
     }
 
@@ -1605,6 +1607,30 @@ public class MyObservables {
                 leftValue -> Observable.interval(1L, TimeUnit.MICROSECONDS),
                 rightValue -> Observable.interval(1L, TimeUnit.MICROSECONDS),
                 (a, b) -> a + b).subscribe(new MyObserver<>());
+    }
+
+    private static ObservableTransformer<String, String> transformer_1() {
+        return upstream ->
+                Observable.merge(upstream.filter(s -> s.equalsIgnoreCase("abc")).doOnNext(s -> System.out.println("doOnNext First")),
+                upstream.filter(s -> s.equalsIgnoreCase("123")).doOnNext(s -> System.out.println("doOnNext Second")));
+    }
+
+    private static ObservableTransformer<String, String> transformer_2() {
+        return upstream -> upstream.map(s -> "alpha");
+
+    }
+
+    public static void concat() {
+        Observable<String> first = Observable.empty();
+        Observable<String> second = Observable.fromCallable(() -> {
+            System.out.println("from callable");
+            return "abc";
+        });
+        Observable<String> third = Observable.just("123");
+        Observable.concat(first, third)
+                .compose(transformer_2())
+                .doOnNext(s -> System.out.println("doOnNext concat"))
+                .subscribe(new MyObserver<>());
     }
 
 }
