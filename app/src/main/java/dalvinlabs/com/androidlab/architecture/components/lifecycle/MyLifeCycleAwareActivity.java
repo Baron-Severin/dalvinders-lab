@@ -1,13 +1,16 @@
 package dalvinlabs.com.androidlab.architecture.components.lifecycle;
 
-import android.arch.lifecycle.LifecycleActivity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import dalvinlabs.com.androidlab.R;
 
-public class MyLifeCycleAwareActivity extends LifecycleActivity {
+/*
+    Support lib 26.1.0 brings life cycle feature in regular activities and fragments.
+ */
+public class MyLifeCycleAwareActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MyLifeCycleAwareActivity.class.getSimpleName();
 
@@ -17,6 +20,8 @@ public class MyLifeCycleAwareActivity extends LifecycleActivity {
         setContentView(R.layout.activity_life_cycle_aware);
         // Passing life cycle to another component
         new CustomComponent(getLifecycle());
+        // Alternate way
+        //getLifecycle().addObserver(getInstanceOfComponent);
     }
 
     @Override
