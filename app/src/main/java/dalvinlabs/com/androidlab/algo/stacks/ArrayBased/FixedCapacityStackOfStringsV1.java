@@ -1,4 +1,4 @@
-package dalvinlabs.com.androidlab.algo.stacks.stackbasedonarray;
+package dalvinlabs.com.androidlab.algo.stacks.ArrayBased;
 
 /**
  * 1. Stacks are implemented by using arrays.

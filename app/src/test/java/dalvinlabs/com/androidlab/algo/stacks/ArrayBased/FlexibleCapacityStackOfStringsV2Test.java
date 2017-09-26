@@ -1,18 +1,18 @@
-package dalvinlabs.com.androidlab.algo.stacks.stackbasedonarray;
+package dalvinlabs.com.androidlab.algo.stacks.ArrayBased;
 
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class FixedCapacityStackOfStringsV1Test {
+public class FlexibleCapacityStackOfStringsV2Test {
 
-    private FixedCapacityStackOfStringsV1 mStack;
+    private FlexibleCapacityStackOfStringsV2 mStack;
     private String mData[] = {"abc", "def", "ghi", "jkl", "mno"};
 
     @Before
     public void init() {
-        mStack = new FixedCapacityStackOfStringsV1(5);
+        mStack = new FlexibleCapacityStackOfStringsV2();
     }
 
     @Test
@@ -34,24 +34,6 @@ public class FixedCapacityStackOfStringsV1Test {
     }
 
     @Test
-    public void testOverflow() throws Exception {
-        for (String eachString : mData) {
-            System.out.println("Pushing item = " + eachString);
-            mStack.push(eachString);
-            mStack.print();
-            System.out.println("# # # # #");
-        }
-        try {
-            System.out.println("Pushing Overflow item");
-            mStack.push("Overflow item");
-            Assert.fail("Expects stack overflow");
-        } catch (Exception e) {
-            System.out.println("Exception = " + e.getMessage());
-            Assert.assertTrue(e.getMessage().equalsIgnoreCase("Stack overflow"));
-        }
-    }
-
-    @Test
     public void testUnderFlow() throws Exception {
         try {
             mStack.print();
@@ -63,5 +45,4 @@ public class FixedCapacityStackOfStringsV1Test {
             Assert.assertTrue(e.getMessage().equalsIgnoreCase("Stack underflow"));
         }
     }
-
 }

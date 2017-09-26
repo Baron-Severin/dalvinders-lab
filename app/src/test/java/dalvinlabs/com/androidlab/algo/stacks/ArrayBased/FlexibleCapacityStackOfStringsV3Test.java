@@ -1,18 +1,18 @@
-package dalvinlabs.com.androidlab.algo.stacks.stackbasedonarray;
+package dalvinlabs.com.androidlab.algo.stacks.ArrayBased;
 
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class FlexibleCapacityStackOfStringsV4Test {
+public class FlexibleCapacityStackOfStringsV3Test {
 
-    private FlexibleCapacityStackOfStringsV4 mStack;
+    private FlexibleCapacityStackOfStringsV3 mStack;
     private String mData[] = {"abc", "def", "ghi", "jkl", "mno"};
 
     @Before
     public void init() {
-        mStack = new FlexibleCapacityStackOfStringsV4();
+        mStack = new FlexibleCapacityStackOfStringsV3();
     }
 
     @Test
@@ -61,7 +61,7 @@ public class FlexibleCapacityStackOfStringsV4Test {
         System.out.println("# # # # #");
         System.out.println("Popped item = " + mStack.pop());
         mStack.print();
-        Assert.assertTrue(mStack.capacity() == 8); // Popping 5th item halves the stack size
+        Assert.assertTrue(mStack.capacity() == 4); // Popping 5th item halves the stack size
         System.out.println("# # # # #");
         mStack.push(mData[4]);
         mStack.print();
@@ -69,19 +69,7 @@ public class FlexibleCapacityStackOfStringsV4Test {
         System.out.println("# # # # #");
         System.out.println("Popped item = " + mStack.pop());
         mStack.print();
-        Assert.assertTrue(mStack.capacity() == 8); // Popping 5th item halves the stack size
-        System.out.println("# # # # #");
-        System.out.println("Popped item = " + mStack.pop());
-        mStack.print();
-        Assert.assertTrue(mStack.capacity() == 8); // Popping 4th item halves the stack size
-        System.out.println("# # # # #");
-        System.out.println("Popped item = " + mStack.pop());
-        mStack.print();
-        Assert.assertTrue(mStack.capacity() == 4); // Popping 3rd item halves the stack size
-        System.out.println("# # # # #");
-        mStack.push(mData[2]);
-        mStack.print();
-        Assert.assertTrue(mStack.capacity() == 4); // Pushing 3rd item won't double the size
+        Assert.assertTrue(mStack.capacity() == 4); // Popping 5th item halves the stack size
         System.out.println("# # # # #");
     }
 }

@@ -1,10 +1,9 @@
-package dalvinlabs.com.androidlab.algo.stacks.stackbasedonarray;
+package dalvinlabs.com.androidlab.algo.stacks.ArrayBased;
 
 /**
  * 1. Stack increase and shrink the array based upon following criteria.
  * 2. Double the size of array when it's FULL
- * 3. Halves the size of array when it's 25% FULL
- * 4. It solves the drawback for V3 rest of the logic is same.
+ * 3. Halves the size of array when it's HALF FULL
  * <p>
  * Time complexity for N items
  * <p>
@@ -24,10 +23,14 @@ package dalvinlabs.com.androidlab.algo.stacks.stackbasedonarray;
  * Similarly time complexity to pop N items => N + 2^K => N (ignoring K i.e. cost of resizing the array).
  * <p>
  * Drawbacks
- * 1. Memory is allocated to array before it's being used.
+ * 1. Frequent resizing and shrinking happens if item is kept pushed and popped multiple times
+ * when array is full.
+ * 2. Push an item when array is full => Double the array size
+ * 3. Pop an item after array size gets doubled => Array shrinks to half
+ * 4. Keep repeating steps 2, 3 and resizing and shrinking happens every time.
  */
 
-class FlexibleCapacityStackOfStringsV4 {
+class FlexibleCapacityStackOfStringsV3 {
 
     private String[] mData = new String[1];
     private int mPointer = -1;
@@ -65,8 +68,8 @@ class FlexibleCapacityStackOfStringsV4 {
         if (mPointer <= -1) throw new Exception("Stack underflow");
         String popItem = mData[mPointer];
         mData[mPointer] = null;
-        if (mData.length > 1 && mPointer == mData.length / 4) {
-            // Array is 25% FULL
+        if (mData.length > 1 && mPointer == mData.length / 2) {
+            // Array is HALF empty
             shrink();
         }
         mPointer -= 1;
