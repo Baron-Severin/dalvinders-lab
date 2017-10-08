@@ -73,13 +73,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".vector.VectorActivity" />
-        <activity android:name=".architecture.mvc.controller.ActivityController"/>
-        <activity android:name=".architecture.mvp.view.ActivityView"/>
-        <activity android:name=".architecture.mvvm.view.ActivityView"/>
-        <activity android:name=".architecture.components.ActivityArchitectureComponents"/>
-        <activity android:name=".architecture.components.lifecycle.MyLifeCycleAwareActivity"/>
-        <activity android:name=".architecture.components.viewmodel.ActivityForViewModelComponent"/>
-        <activity android:name=".dagger.DaggerActivity"/>
+        <activity android:name=".architecture.mvc.controller.ActivityController" />
+        <activity android:name=".architecture.mvp.view.ActivityView" />
+        <activity android:name=".architecture.mvvm.view.ActivityView" />
+        <activity android:name=".architecture.components.ActivityArchitectureComponents" />
+        <activity android:name=".architecture.components.lifecycle.MyLifeCycleAwareActivity" />
+        <activity android:name=".architecture.components.viewmodel.ActivityForViewModelComponent" />
+        <activity android:name=".dagger.DaggerActivity" />
+        <activity android:name=".UX.UxActivity" />
+        <activity android:name=".UX.Recycler.RecyclerActivity"></activity>
     </application>
 
 </manifest>
