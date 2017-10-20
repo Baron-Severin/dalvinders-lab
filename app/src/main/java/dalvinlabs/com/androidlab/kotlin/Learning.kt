@@ -134,6 +134,7 @@ class Learning {
 
             var one = One("hello", 5)
             // TODO: why one.msg and one.value is not accessible
+            // It required var/val in primary constructor to expose properties
             println(one.toString())
 
             // Traditional way

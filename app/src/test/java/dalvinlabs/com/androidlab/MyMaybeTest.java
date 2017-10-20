@@ -11,4 +11,9 @@ public class MyMaybeTest {
     public void testJust() {
         MyMaybe.just();
     }
+
+    @Test
+    public void testFromCallable() {
+        MyMaybe.fromCallable();
+    }
 }

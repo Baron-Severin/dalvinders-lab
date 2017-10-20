@@ -84,6 +84,16 @@ public class MyMaybe {
         //Invokes observer's onError
         //Maybe.error(new Throwable("Test exception"))
         //        .subscribe(new MyMayBeObserver<>());
-
     }
+
+    public static void fromCallable() {
+        // Won't invoke onSuccess of observer because it returns null
+        Maybe.fromCallable(() -> null)
+                .subscribe(new MyMayBeObserver<>());
+
+        Maybe.fromCallable(() -> "abc")
+                .subscribe(new MyMayBeObserver<>());
+    }
+
+
 }

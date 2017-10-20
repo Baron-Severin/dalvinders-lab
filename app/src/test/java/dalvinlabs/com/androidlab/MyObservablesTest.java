@@ -351,6 +351,11 @@ public class MyObservablesTest {
     }
 
     @Test
+    public void testOnError() throws Exception {
+        MyObservables.onError();
+    }
+
+    @Test
     public void test() throws Exception {
 
     }

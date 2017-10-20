@@ -1633,4 +1633,19 @@ public class MyObservables {
                 .subscribe(new MyObserver<>());
     }
 
+    private static int testError(int value) throws Exception {
+        if (value == 2) {
+            throw new Exception("Test Exception");
+        }
+        return value;
+    }
+
+    public static void onError() {
+        // onErrorReturn just returns 1 next item and invokes onComplete
+        Observable.just(1, 2, 3)
+                .map(MyObservables::testError)
+                .onErrorReturn(throwable -> 100)
+                .subscribe(new MyObserver<>());
+    }
+
 }
