@@ -2,9 +2,11 @@ package dalvinlabs.com.androidlab.algo.sort.mergesort;
 
 
 /*
-    1. Precondition both halves of array is sorted.
+    1. Precondition both halves of array are sorted.
     2. Copy the array into aux array i.e. make a copy.
     3. Compare the entries of 2 halves and put into a copy.
+    4. Time complexity : O(N)
+    5. Space complexity: O(N), Needs extra array to copy the elements
 */
 
 import dalvinlabs.com.androidlab.BuildConfig;

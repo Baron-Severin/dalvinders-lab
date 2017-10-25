@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import dalvinlabs.com.androidlab.UX.UxActivity;
 import dalvinlabs.com.androidlab.architecture.components.ActivityArchitectureComponents;
 import dalvinlabs.com.androidlab.architecture.mvc.controller.ActivityController;
 import dalvinlabs.com.androidlab.architecture.mvp.view.ActivityView;
@@ -176,6 +177,11 @@ public class ScrollingActivity extends AppCompatActivity {
     public void onClickDagger(View view) {
         Log.d(LOG_TAG, "onClickAndroidArchitecture");
         startActivity(new Intent(this, DaggerActivity.class));
+    }
+
+    public void onClickUX(View view) {
+        Log.d(LOG_TAG, "onClickUX");
+        startActivity(new Intent(this, UxActivity.class));
     }
 
 }

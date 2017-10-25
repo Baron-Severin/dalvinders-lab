@@ -13,7 +13,7 @@ public class CustomComponent implements LifecycleObserver {
 
     CustomComponent(Lifecycle lifecycle) {
         this.lifecycle = lifecycle;
-        // Observing life cycle events in this component.
+        // Observing life cycle events in this component
         this.lifecycle.addObserver(this);
     }
 
