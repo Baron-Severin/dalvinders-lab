@@ -73,6 +73,9 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
+    // Google play services for NEAR-BY feature
+    implementation 'com.google.android.gms:play-services-nearby:11.0.4'
+
 }
 repositories {
     mavenCentral()

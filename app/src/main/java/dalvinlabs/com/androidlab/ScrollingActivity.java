@@ -22,6 +22,7 @@ import dalvinlabs.com.androidlab.architecture.mvp.view.ActivityView;
 import dalvinlabs.com.androidlab.dagger.DaggerActivity;
 import dalvinlabs.com.androidlab.deeplink.DeepLinkOptionsActivity;
 import dalvinlabs.com.androidlab.design.patterns.abstractfactory.AbstractFactory;
+import dalvinlabs.com.androidlab.nearby.NearbyActivity;
 import dalvinlabs.com.androidlab.network.okhttp.OkHttp;
 import dalvinlabs.com.androidlab.speechrecognition.SpeechRecognitionActivity;
 import dalvinlabs.com.androidlab.vector.VectorActivity;
@@ -182,6 +183,11 @@ public class ScrollingActivity extends AppCompatActivity {
     public void onClickUX(View view) {
         Log.d(LOG_TAG, "onClickUX");
         startActivity(new Intent(this, UxActivity.class));
+    }
+
+    public void onClickNearby(View view) {
+        Log.d(LOG_TAG, "onClickUX");
+        startActivity(new Intent(this, NearbyActivity.class));
     }
 
 }

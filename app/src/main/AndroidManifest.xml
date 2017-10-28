@@ -5,6 +5,13 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- FOR NEARBY -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:name=".AndroidLabApplication"
         android:allowBackup="true"
@@ -81,7 +88,17 @@
         <activity android:name=".architecture.components.viewmodel.ActivityForViewModelComponent" />
         <activity android:name=".dagger.DaggerActivity" />
         <activity android:name=".UX.UxActivity" />
-        <activity android:name=".UX.Recycler.RecyclerActivity"></activity>
+        <activity android:name=".UX.Recycler.RecyclerActivity" />
+        <activity android:name=".nearby.NearbyActivity" />
+        <activity android:name=".nfc.NfcActivity">
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="dalvin"
+                    android:host="dalvinlabs.com"
+                    android:pathPrefix="/nfc" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
