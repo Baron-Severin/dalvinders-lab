@@ -127,12 +127,7 @@ public class NearbyActivity extends AppCompatActivity implements GoogleApiClient
             viewModel.found.set("Found = " + discoveredEndpointInfo.getEndpointName() + " , ServiceId : " + discoveredEndpointInfo.getServiceId());
             // Request connection
             Nearby.Connections.requestConnection(googleApiClient, NICK_NAME, endPoint, connectionLifecycleCallback)
-                    .setResultCallback(new ResultCallback<Status>() {
-                        @Override
-                        public void onResult(@NonNull Status status) {
-                            Log.d(LOG_TAG,"requestConnection status = " + status.toString());
-                        }
-                    });
+                    .setResultCallback(status -> Log.d(LOG_TAG,"requestConnection status = " + status.toString()));
         }
 
         @Override
@@ -225,7 +220,9 @@ public class NearbyActivity extends AppCompatActivity implements GoogleApiClient
 
     public void disconnect(View view) {
         Nearby.Connections.stopDiscovery(googleApiClient);
-        Nearby.Connections.disconnectFromEndpoint(googleApiClient, viewModel.endPointConnected.get());
+        if (viewModel.endPointConnected.get() != null && !viewModel.endPointConnected.get().isEmpty()) {
+            Nearby.Connections.disconnectFromEndpoint(googleApiClient, viewModel.endPointConnected.get());
+        }
     }
 
     @Override
