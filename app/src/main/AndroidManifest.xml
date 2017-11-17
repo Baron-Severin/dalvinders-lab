@@ -90,15 +90,18 @@
         <activity android:name=".UX.UxActivity" />
         <activity android:name=".UX.Recycler.RecyclerActivity" />
         <activity android:name=".nearby.NearbyActivity" />
+
         <activity android:name=".nfc.NfcActivity">
             <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:scheme="dalvin"
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
                     android:host="dalvinlabs.com"
-                    android:pathPrefix="/nfc" />
+                    android:pathPrefix="/nfc"
+                    android:scheme="dalvin" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
