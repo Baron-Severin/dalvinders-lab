@@ -13,16 +13,7 @@ class Node {
         this.data = data;
     }
 
-    /*
-        Left Parent Right
-     */
-    void printInOrder() {
-        if (left != null) {
-            left.printInOrder();
-        }
+    void print() {
         System.out.println(data);
-        if (right != null) {
-            right.printInOrder();
-        }
     }
 }

@@ -14,15 +14,40 @@ import java.util.Queue;
  *
  * Hence a well structured balanced tree provides Log(N) for search/insert/delete operations.
  */
-public class BinarySearchTree {
+class BinarySearchTree {
 
-    private Node root;
+    Node root;
     private int count = 0;
 
     BinarySearchTree(int data) {
         root = new Node(data);
         count += 1;
     }
+
+    /*
+    Not accurate, but enough to print tree structure
+ */
+    private int logBase2(int dividend) {
+        int log = 0;
+        int remainder = 0;
+        while (dividend >= 2) {
+            dividend = dividend / 2;
+            remainder = dividend % 2;
+            log += 1;
+        }
+        if (remainder >= 1) {
+            log += 1;
+        }
+        return log;
+    }
+
+    private void printTabs(long count) {
+        for (int i = 0; i < count; i++) {
+            System.out.print("\t");
+        }
+    }
+
+    // PUBLIC
 
     Node search(int data) {
         if (root == null) {
@@ -78,12 +103,45 @@ public class BinarySearchTree {
         }
     }
 
-    void printInOrder() {
+    /**
+        Keep traversing left until encounter null
+     */
+    Node findMinimum() {
         if (root == null) {
             System.out.println("Tree is empty");
-            return;
+            return null;
         }
-        root.printInOrder();
+        Node current = root;
+        while (current.left != null) {
+            current = current.left;
+        }
+        return current;
+    }
+
+    /**
+        Keep traversing right until encounter null
+     */
+    Node findMaximum() {
+        if (root == null) {
+            System.out.println("Tree is empty");
+            return null;
+        }
+        Node current = root;
+        while (current.right != null) {
+            current = current.right;
+        }
+        return current;
+    }
+
+    /*
+        Left Parent Right
+     */
+    void printInOrder(Node parent) {
+        if (parent != null) {
+            printInOrder(parent.left);
+            parent.print();
+            printInOrder(parent.right);
+        }
     }
 
     /*
@@ -94,6 +152,7 @@ public class BinarySearchTree {
             System.out.println("Tree is empty");
             return;
         }
+        System.out.println("TREE BFS TRAVERSAL");
         int height = logBase2(count);
         Queue<Node> queue = new LinkedList<>();
         queue.add(root);
@@ -126,29 +185,6 @@ public class BinarySearchTree {
                 current.right.tabs = current.tabs + 2;
                 current.right.prefix = "\\";
             }
-        }
-    }
-
-    /*
-        Not accurate, but enough to print tree structure
-     */
-    private int logBase2(int dividend) {
-        int log = 0;
-        int remainder = 0;
-        while (dividend >= 2) {
-            dividend = dividend / 2;
-            remainder = dividend % 2;
-            log += 1;
-        }
-        if (remainder >= 1) {
-            log += 1;
-        }
-        return log;
-    }
-
-    private void printTabs(long count) {
-        for (int i = 0; i < count; i++) {
-            System.out.print("\t");
         }
     }
 
