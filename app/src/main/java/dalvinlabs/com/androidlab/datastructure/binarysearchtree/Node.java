@@ -13,7 +13,8 @@ class Node {
         this.data = data;
     }
 
-    void print() {
-        System.out.println(data);
+    String print() {
+        //System.out.print(data + " ");
+        return data + "";
     }
 }
