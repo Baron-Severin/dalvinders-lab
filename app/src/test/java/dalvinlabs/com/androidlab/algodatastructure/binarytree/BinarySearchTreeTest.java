@@ -1,13 +1,10 @@
-package dalvinlabs.com.androidlab.algodatastructure.binarysearchtree;
+package dalvinlabs.com.androidlab.algodatastructure.binarytree;
 
 
 import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import dalvinlabs.com.androidlab.algodatastructure.binarysearchtree.BinarySearchTree;
-import dalvinlabs.com.androidlab.algodatastructure.binarysearchtree.Node;
 
 public class BinarySearchTreeTest {
 
@@ -26,6 +23,7 @@ public class BinarySearchTreeTest {
         binarySearchTree.insert(4);
         binarySearchTree.insert(2);
         binarySearchTree.printBFS();
+        binarySearchTree.printTree();
     }
 
     @Test
@@ -36,19 +34,19 @@ public class BinarySearchTreeTest {
 
     @Test
     public void testSearch() {
-        Node node = binarySearchTree.search(9);
+        BinarySearchTree.Node node = binarySearchTree.search(9);
         Assert.assertEquals(node.data, 9);
     }
 
     @Test
     public void testMinimum() {
-        Node minimum = binarySearchTree.findMinimum();
+        BinarySearchTree.Node minimum = binarySearchTree.findMinimum();
         Assert.assertEquals(minimum.data, 0);
     }
 
     @Test
     public void testMaximum() {
-        Node maximum = binarySearchTree.findMaximum();
+        BinarySearchTree.Node maximum = binarySearchTree.findMaximum();
         Assert.assertEquals(maximum.data, 9);
     }
 

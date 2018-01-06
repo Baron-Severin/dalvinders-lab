@@ -6,7 +6,7 @@ package dalvinlabs.com.androidlab.algodatastructure.stacks.LinkedListBased;
     3. Push time complexity : 1
     4. Pop time complexity : 1
  */
-class StackGeneric<T> {
+public class StackGeneric<T> {
 
     private class Node {
         T data;
@@ -15,7 +15,7 @@ class StackGeneric<T> {
 
     private Node start;
 
-    void push(final T data) {
+    public void push(final T data) {
         Node node = new Node();
         node.data = data;
         // New node points to previous top of the stack element
@@ -24,7 +24,7 @@ class StackGeneric<T> {
         start = node;
     }
 
-    T pop() {
+    public T pop() {
         T data = null;
         if (start != null) {
             data = start.data;
@@ -42,6 +42,10 @@ class StackGeneric<T> {
             System.out.println(node.data.toString());
             node = node.next;
         }
+    }
+
+    public boolean isEmpty() {
+        return start == null;
     }
 
 }

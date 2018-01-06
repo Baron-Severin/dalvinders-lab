@@ -1,9 +1,11 @@
-package dalvinlabs.com.androidlab.algodatastructure.binarysearchtree;
+package dalvinlabs.com.androidlab.algodatastructure.binarytree;
 
 import android.support.annotation.NonNull;
 
 import java.util.LinkedList;
 import java.util.Queue;
+
+import dalvinlabs.com.androidlab.algodatastructure.stacks.LinkedListBased.StackGeneric;
 
 /**
  * Binary tree where left child < root and right child > root, Duplicates are not allowed.
@@ -14,6 +16,25 @@ import java.util.Queue;
  * Hence a well structured balanced tree provides Log(N) for search/insert/delete operations.
  */
 class BinarySearchTree {
+
+    static class Node {
+
+        int data;
+        String prefix = "";
+        String suffix = "";
+        int tabs;
+        Node left;
+        Node right;
+
+        Node(int data) {
+            this.data = data;
+        }
+
+        String print() {
+            //System.out.print(data + " ");
+            return data + "";
+        }
+    }
 
     Node root;
     private int count = 0;
@@ -230,6 +251,52 @@ class BinarySearchTree {
                 current.right.prefix = "\\";
             }
         }
+    }
+
+    void printTree() {
+        if (root == null) {
+            System.out.println("Empty Tree");
+            return;
+        }
+        StackGeneric<Node> globalStack = new StackGeneric<>();
+        globalStack.push(root);
+        int mBlanks = 32;
+        boolean isRowEmpty = false;
+        System.out.println("..............................................");
+        while (isRowEmpty == false) {
+            StackGeneric<Node> localStack = new StackGeneric<>();
+            isRowEmpty = true;
+
+            for (int i = 0; i < mBlanks; i++) {
+                System.out.print(" ");
+            }
+
+            while (globalStack.isEmpty() == false) {
+                Node temp = globalStack.pop();
+                if (temp != null) {
+                    System.out.print(temp.data);
+                    localStack.push(temp.left);
+                    localStack.push(temp.right);
+
+                    if (temp.left != null && temp.right != null) {
+                        isRowEmpty = false;
+                    }
+                } else {
+                    System.out.print("..");
+                    localStack.push(null);
+                    localStack.push(null);
+                }
+                for (int i = 0; i < mBlanks * 2 - 2; i++) {
+                    System.out.print(" ");
+                }
+            }
+            System.out.println();
+            mBlanks /= 2;
+            while (localStack.isEmpty() == false) {
+                globalStack.push(localStack.pop());
+            }
+        }
+        System.out.println("..............................................");
     }
 
     /**
