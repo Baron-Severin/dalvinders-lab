@@ -6,7 +6,7 @@ package dalvinlabs.com.androidlab.algodatastructure.stacks.LinkedListBased;
     3. Enqueue time complexity : N
     4. Dequeue time complexity : 1
  */
-class QueueGeneric<T> {
+public class QueueGeneric<T> {
 
     private class Node {
         T data;
@@ -23,7 +23,7 @@ class QueueGeneric<T> {
         return node;
     }
 
-    void enqueue(final T data) {
+    public void enqueue(final T data) {
         Node node = new Node();
         node.data = data;
         if (start == null) {
@@ -35,7 +35,7 @@ class QueueGeneric<T> {
         }
     }
 
-    T dequeue() {
+    public T dequeue() {
         T data = null;
         if (start != null) {
             data = start.data;
@@ -47,13 +47,17 @@ class QueueGeneric<T> {
         return data;
     }
 
-    void print() {
+    public void print() {
         Node node = start;
         System.out.print("Queue <--> ");
         while (node != null) {
             System.out.print(node.data.toString() + " ");
             node = node.next;
         }
+    }
+
+    public boolean isEmpty() {
+        return start == null;
     }
 
 }

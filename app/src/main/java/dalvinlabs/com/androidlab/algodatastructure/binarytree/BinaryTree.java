@@ -1,11 +1,18 @@
 package dalvinlabs.com.androidlab.algodatastructure.binarytree;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+
+import dalvinlabs.com.androidlab.algodatastructure.stacks.LinkedListBased.QueueGeneric;
 import dalvinlabs.com.androidlab.algodatastructure.stacks.LinkedListBased.StackGeneric;
 
 /**
- * Each node has 0 or 2 children
+ * Full BT = Each node has 0 or 2 children
+ * Complete BT = Each not has 2 children except last level and last level children as left as possible
  */
-public class FullBinaryTree {
+public class BinaryTree {
 
     private static class Node {
 
@@ -20,8 +27,13 @@ public class FullBinaryTree {
 
     Node root;
 
-    public FullBinaryTree() {
+    BinaryTree() {}
+
+    public BinaryTree(Node root) {
+        this.root = root;
     }
+
+    private QueueGeneric<BinaryTree> queue = new QueueGeneric<>();
 
     void add(String data) {
         Node node = new Node(data);
@@ -33,6 +45,32 @@ public class FullBinaryTree {
         parent.left = root;
         parent.right = new Node(data);
         root = parent;
+    }
+
+    void addIntoQueue(String data) {
+        BinaryTree binaryTree = new BinaryTree(new Node(data));
+        queue.enqueue(binaryTree);
+    }
+
+    void createBalanced() {
+        BinaryTree first;
+        BinaryTree second;
+        BinaryTree balanced = null;
+        Node node;
+        while (!queue.isEmpty()) {
+            first = queue.dequeue();
+            second = queue.dequeue();
+            node = new Node("+");
+            node.left = first.root;
+            if (second != null) {
+                node.right = second.root;
+            }
+            balanced = new BinaryTree(node);
+            queue.enqueue(balanced);
+        }
+        if (balanced != null) {
+            root = balanced.root;
+        }
     }
 
     String preorder(Node node) {
