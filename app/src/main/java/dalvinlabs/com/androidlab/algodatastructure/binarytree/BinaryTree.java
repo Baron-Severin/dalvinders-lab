@@ -33,7 +33,7 @@ public class BinaryTree {
         this.root = root;
     }
 
-    private QueueGeneric<BinaryTree> queue = new QueueGeneric<>();
+    private List<BinaryTree> list = new ArrayList<>();
 
     void add(String data) {
         Node node = new Node(data);
@@ -49,28 +49,43 @@ public class BinaryTree {
 
     void addIntoQueue(String data) {
         BinaryTree binaryTree = new BinaryTree(new Node(data));
-        queue.enqueue(binaryTree);
+        list.add(binaryTree);
     }
 
+    /*
+        TODO: Don't create 3 node tree if there's only 1 node left.
+     */
     void createBalanced() {
+        if (list.isEmpty()) {
+            System.out.println("Tree is empty");
+        }
         BinaryTree first;
-        BinaryTree second;
-        BinaryTree balanced = null;
+        BinaryTree second = null;
+        BinaryTree balanced;
         Node node;
-        while (!queue.isEmpty()) {
-            first = queue.dequeue();
-            second = queue.dequeue();
-            node = new Node("+");
-            node.left = first.root;
-            if (second != null) {
-                node.right = second.root;
+        List<BinaryTree> localList = new ArrayList<>();
+        while (list.size() > 1) {
+            localList.addAll(list);
+            list.clear();
+            while (!localList.isEmpty()) {
+                first = localList.remove(0);
+                if (!localList.isEmpty()) {
+                    second = localList.remove(0);
+                } else {
+                    second = null;
+                }
+                node = new Node("+");
+                if (first != null) {
+                    node.left = first.root;
+                }
+                if (second != null) {
+                    node.right = second.root;
+                }
+                balanced = new BinaryTree(node);
+                list.add(balanced);
             }
-            balanced = new BinaryTree(node);
-            queue.enqueue(balanced);
         }
-        if (balanced != null) {
-            root = balanced.root;
-        }
+        root = list.get(0).root;
     }
 
     String preorder(Node node) {
