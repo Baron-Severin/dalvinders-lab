@@ -37,4 +37,11 @@ public class BinaryTreeTest {
         binaryTree.createBalanced();
         binaryTree.printTree();
     }
+
+    @Test
+    public void testCreateTopDown() {
+        String[] input = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
+        binaryTree.createTopDown(input, 1);
+        binaryTree.printTree();
+    }
 }

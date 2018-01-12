@@ -2,10 +2,7 @@ package dalvinlabs.com.androidlab.algodatastructure.binarytree;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
-import dalvinlabs.com.androidlab.algodatastructure.stacks.LinkedListBased.QueueGeneric;
 import dalvinlabs.com.androidlab.algodatastructure.stacks.LinkedListBased.StackGeneric;
 
 /**
@@ -35,6 +32,9 @@ public class BinaryTree {
 
     private List<BinaryTree> list = new ArrayList<>();
 
+    /*
+        8.1
+     */
     void add(String data) {
         Node node = new Node(data);
         if (root == null) {
@@ -53,7 +53,7 @@ public class BinaryTree {
     }
 
     /*
-        TODO: Don't create 3 node tree if there's only 1 node left.
+        8.2
      */
     void createBalanced() {
         if (list.isEmpty()) {
@@ -71,22 +71,38 @@ public class BinaryTree {
                 first = localList.remove(0);
                 if (!localList.isEmpty()) {
                     second = localList.remove(0);
+                    node = new Node("+");
+                    if (first != null) {
+                        node.left = first.root;
+                    }
+                    if (second != null) {
+                        node.right = second.root;
+                    }
+                    balanced = new BinaryTree(node);
                 } else {
-                    second = null;
+                    balanced = first;
                 }
-                node = new Node("+");
-                if (first != null) {
-                    node.left = first.root;
-                }
-                if (second != null) {
-                    node.right = second.root;
-                }
-                balanced = new BinaryTree(node);
                 list.add(balanced);
             }
         }
         root = list.get(0).root;
     }
+
+    /*
+        8.3
+    */
+    Node createTopDown(String[] array, int i) {
+        Node parent = new Node(array[i - 1]);
+        if (2 * i <= array.length) {
+            parent.left = createTopDown(array, 2 * i);
+        }
+        if (2 * i + 1 <= array.length) {
+            parent.right = createTopDown(array, 2 * i + 1);
+        }
+        root = parent;
+        return parent;
+    }
+
 
     String preorder(Node node) {
         String data = "";
