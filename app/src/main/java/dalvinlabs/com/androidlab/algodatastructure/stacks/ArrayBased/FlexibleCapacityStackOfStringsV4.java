@@ -27,7 +27,7 @@ package dalvinlabs.com.androidlab.algodatastructure.stacks.ArrayBased;
  * 1. Memory is allocated to array before it's being used.
  */
 
-class FlexibleCapacityStackOfStringsV4 {
+public class FlexibleCapacityStackOfStringsV4 {
 
     private String[] mData = new String[1];
     private int mPointer = -1;
@@ -52,7 +52,7 @@ class FlexibleCapacityStackOfStringsV4 {
         mData = resizedData;
     }
 
-    void push(String item) throws Exception {
+    public void push(String item) throws Exception {
         mPointer += 1;
         if (mPointer >= mData.length) {
             // Array is FULL
@@ -61,7 +61,7 @@ class FlexibleCapacityStackOfStringsV4 {
         mData[mPointer] = item;
     }
 
-    String pop() throws Exception {
+    public String pop() throws Exception {
         if (mPointer <= -1) throw new Exception("Stack underflow");
         String popItem = mData[mPointer];
         mData[mPointer] = null;
