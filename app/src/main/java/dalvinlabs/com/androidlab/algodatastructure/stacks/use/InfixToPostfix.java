@@ -5,7 +5,7 @@ import dalvinlabs.com.androidlab.algodatastructure.stacks.LinkedListBased.StackG
 
 public class InfixToPostfix {
 
-    static String convert(String infix) throws Exception{
+    public static String convert(String infix) throws Exception {
         String postfix = "";
         StackGeneric<String> stack = new StackGeneric();
         String current = "";

@@ -103,6 +103,30 @@ public class BinaryTree {
         return parent;
     }
 
+    /*
+        8.4
+     */
+    Node createFromPostfix(String postfix) {
+        StackGeneric<Node> stack = new StackGeneric<>();
+        String current;
+        Node left;
+        Node right;
+        for (int i = 0; i < postfix.length(); i++) {
+            current = postfix.substring(i, i+1);
+            if (current.matches("\\d")) {
+                stack.push(new Node(current));
+            } else {
+                right = stack.pop();
+                left = stack.pop();
+                Node node = new Node(current);
+                node.left = left;
+                node.right = right;
+                stack.push(node);
+            }
+        }
+        root = stack.pop();
+        return root;
+    }
 
     String preorder(Node node) {
         String data = "";
@@ -113,6 +137,32 @@ public class BinaryTree {
         if (node.right != null) {
             data = data + preorder(node.right);
         }
+        return data;
+    }
+
+    String inOrderWithBrackets(Node node) {
+        String data = "";
+        if (node.left != null) {
+            data = data + "(";
+            data = data + inOrderWithBrackets(node.left);
+        }
+        data = data + node.data;
+        if (node.right != null) {
+            data = data + inOrderWithBrackets(node.right);
+            data = data + ")";
+        }
+        return data;
+    }
+
+    String postOrder(Node node) {
+        String data = "";
+        if (node.left != null) {
+            data = data + postOrder(node.left);
+        }
+        if (node.right != null) {
+            data = data + postOrder(node.right);
+        }
+        data = data + node.data;
         return data;
     }
 
