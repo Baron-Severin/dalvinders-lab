@@ -1,5 +1,7 @@
 package dalvinlabs.com.androidlab.algodatastructure.binarytree;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,16 +11,22 @@ import dalvinlabs.com.androidlab.algodatastructure.stacks.LinkedListBased.StackG
  * Full BT = Each node has 0 or 2 children
  * Complete BT = Each not has 2 children except last level and last level children as left as possible
  */
-public class BinaryTree {
+public class BinaryTree implements Comparable<BinaryTree> {
 
-    private static class Node {
+    static class Node implements Comparable<Node> {
 
         String data;
+        int frequency;
         Node left;
         Node right;
 
         Node(String data) {
             this.data = data;
+        }
+
+        @Override
+        public int compareTo(@NonNull Node node) {
+            return frequency - node.frequency;
         }
     }
 
@@ -32,9 +40,14 @@ public class BinaryTree {
 
     private List<BinaryTree> list = new ArrayList<>();
 
+    @Override
+    public int compareTo(@NonNull BinaryTree o) {
+        return root.compareTo(o.root);
+    }
+
     /*
-        8.1
-     */
+            8.1
+         */
     void add(String data) {
         Node node = new Node(data);
         if (root == null) {
