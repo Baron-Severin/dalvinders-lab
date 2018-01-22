@@ -15,7 +15,7 @@ import dalvinlabs.com.androidlab.algodatastructure.stacks.LinkedListBased.StackG
  *
  * Hence a well structured balanced tree provides Log(N) for search/insert/delete operations.
  */
-class BinarySearchTree {
+public class BinarySearchTree {
 
     static class Node {
 
@@ -39,7 +39,7 @@ class BinarySearchTree {
     Node root;
     private int count = 0;
 
-    BinarySearchTree(int data) {
+    public BinarySearchTree(int data) {
         root = new Node(data);
         count += 1;
     }
@@ -91,7 +91,7 @@ class BinarySearchTree {
         return null;
     }
 
-    void insert(int data) {
+    public void insert(int data) {
         Node node = new Node(data);
         if (root == null) {
             root = node;
@@ -308,7 +308,7 @@ class BinarySearchTree {
      * 2. Node to be deleted has ONE child
      * 3. Node to be deleted has TWO child (Most complex)
      */
-    void delete(int data) {
+    public void delete(int data) {
         if (root == null) {
             System.out.println("Tree is empty");
         }
