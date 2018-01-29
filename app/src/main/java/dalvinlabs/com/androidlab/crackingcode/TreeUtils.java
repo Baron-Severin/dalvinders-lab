@@ -1,27 +1,11 @@
 package dalvinlabs.com.androidlab.crackingcode;
 
+
 import dalvinlabs.com.androidlab.algodatastructure.stacks.LinkedListBased.StackGeneric;
 
-/**
- * 4.2
- */
-public class MinimalTree {
+public class TreeUtils {
 
-    private Node root;
-
-    private Node recurse(int[] array, int start, int end) {
-        int mid = (start + end)/2;
-        Node node = new Node(mid);
-        if (start < mid) {
-            node.left = recurse(array, start, mid-1);
-        }
-        if (end > mid) {
-            node.right = recurse(array, mid + 1, end);
-        }
-        return node;
-    }
-
-    public int sizeOfTree(Node node) {
+    private static int sizeOfTree(Node node) {
         int size = 0;
         if (node != null) {
             size += sizeOfTree(node.left);
@@ -31,7 +15,7 @@ public class MinimalTree {
         return size;
     }
 
-    public int heightOfTree(int size) {
+    private static int heightOfTree(int size) {
         int counter = 0;
         while ((size + 1) > Math.pow(2, counter)) {
             counter ++;
@@ -39,18 +23,7 @@ public class MinimalTree {
         return counter - 1;
     }
 
-    public void create(int[] array) {
-        root = recurse(array, 0, array.length - 1);
-    }
-
-    public Node getRoot() {
-        return root;
-    }
-
-    /**
-     * FIXME: Printing order problem if tree is not PERFECT i.e. all nodes are full and leaves are at last level
-     */
-    public void print() {
+    public static void print(Node root) {
         StackGeneric<Node> presentStack = new StackGeneric<>();
         StackGeneric<Node> nextStack = new StackGeneric<>();
         presentStack.push(root);

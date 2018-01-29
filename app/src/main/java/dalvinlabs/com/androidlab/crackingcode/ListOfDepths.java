@@ -1,5 +1,9 @@
 package dalvinlabs.com.androidlab.crackingcode;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import dalvinlabs.com.androidlab.algodatastructure.stacks.LinkedListBased.StackGeneric;
 
 /**
@@ -9,6 +13,9 @@ import dalvinlabs.com.androidlab.algodatastructure.stacks.LinkedListBased.StackG
  */
 public class ListOfDepths {
 
+    /*
+        BFS approach
+     */
     public LinkNode[] createLists(MinimalTree tree) {
         StackGeneric<Node> currentStack = new StackGeneric<>();
         currentStack.push(tree.getRoot());
@@ -47,4 +54,30 @@ public class ListOfDepths {
             }
         }
     }
+
+    /*
+        Modification of PreOrder
+     */
+    public List<LinkedList<Node>> createListsUsingPreOrder(MinimalTree tree) {
+        List<LinkedList<Node>> lists = new ArrayList<>();
+        preOrder(lists, tree.getRoot(), 0);
+        return lists;
+    }
+
+    private void preOrder(List<LinkedList<Node>> lists, Node node, int level) {
+
+        if (node == null) return;
+
+        LinkedList<Node> linkedList;
+        if (level >= lists.size()) {
+            linkedList = new LinkedList<>();
+            lists.add(linkedList);
+        } else {
+            linkedList = lists.get(level);
+        }
+        linkedList.add(node);
+        preOrder(lists, node.left, level + 1);
+        preOrder(lists, node.right, level + 1);
+    }
+
 }
