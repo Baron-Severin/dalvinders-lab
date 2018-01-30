@@ -69,4 +69,29 @@ public class TreeUtils {
             }
         }
     }
+
+    /**
+     * 4.5 : Check if given Tree is a Binary Search Tree
+     */
+    public static boolean isBST(Node root, Integer min, Integer max) {
+        boolean status = true;
+        if (root == null) return status;
+
+        if (max != null && root.data > max) {
+            status = false;
+        }
+
+        if (min != null && root.data < min) {
+            status = false;
+        }
+
+        if (status) {
+            status = isBST(root.left, min, root.data);
+        }
+
+        if (status) {
+            status = isBST(root.right, root.data, max);
+        }
+        return status;
+    }
 }
