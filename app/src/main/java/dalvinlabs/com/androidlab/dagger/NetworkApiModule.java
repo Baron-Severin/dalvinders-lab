@@ -13,7 +13,7 @@ import dagger.Provides;
 @Module
 class NetworkApiModule {
 
-    @Singleton
+//    @NetworkScope
     @Provides
     /*
         1. Instance of NetworkApiInjectionByProvides dependency created here.

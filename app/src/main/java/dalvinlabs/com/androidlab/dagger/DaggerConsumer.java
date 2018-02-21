@@ -6,6 +6,7 @@ import android.util.Log;
 
 import javax.inject.Inject;
 
+import dagger.LibraryApi;
 import dalvinlabs.com.androidlab.AndroidLabApplication;
 
 public class DaggerConsumer {
@@ -24,6 +25,9 @@ public class DaggerConsumer {
 
     @Inject
     DaggerConsumer2 daggerConsumer2;
+
+    @Inject
+    LibraryApi libraryApi;
 
     DaggerConsumer(Context context) {
         AndroidLabApplication androidLabApplication = (AndroidLabApplication) context.getApplicationContext();
@@ -44,6 +48,8 @@ public class DaggerConsumer {
             Log.d(LOG_TAG, "Injection through annotation @Provides passed");
             System.out.println("Validate user = " + networkApiInjectionByProvides.validateUser("abc", "123"));
         }
+
+        Log.d(LOG_TAG, "libraryApi = " + libraryApi);
 
         if (daggerConsumer2 != null) {
             daggerConsumer2.testDagger();
